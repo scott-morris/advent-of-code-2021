@@ -10,15 +10,15 @@ const part2 = require('./part2.js');
 
 // Public
 
-async function main() {
+function main() {
   const input = fs
-    .readFileSync(path.join(__dirname, 'input.txt'))
+    .readFileSync(path.resolve(__dirname, '../../data/input-01.data'))
     .toString()
     .split('\n')
     .map(Number);
 
-  const result1 = await part1(input);
-  const result2 = await part2(input);
+  const result1 = part1(input);
+  const result2 = part2(input);
 
   console.log(JSON.stringify({ result1, result2 }, null, 2));
 }

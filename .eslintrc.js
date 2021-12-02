@@ -26,6 +26,8 @@ module.exports = {
         ],
       },
     ],
+    'no-console': 'off',
+    'import/extensions': 'off',
     // Legitimately helpful in JSX files especially.
     'no-nested-ternary': 'off',
     // So prettier can do its job.

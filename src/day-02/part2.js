@@ -1,4 +1,4 @@
-async function processData(input) {
+function processData(input) {
   let horizontal = 0;
   let depth = 0;
   let aim = 0;
@@ -26,8 +26,8 @@ async function processData(input) {
   return { horizontal, depth, aim };
 }
 
-async function part2(input) {
-  const { horizontal, depth } = await processData(input);
+function part2(input) {
+  const { horizontal, depth } = processData(input);
   return horizontal * depth;
 }
 
