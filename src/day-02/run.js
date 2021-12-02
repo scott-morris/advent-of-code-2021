@@ -1,9 +1,8 @@
-// Libraries
-
-const fs = require('fs-extra');
-const path = require('path');
-
 // Dependencies
+
+const displayOutput = require('../helpers/display-output');
+const fs = require('../helpers/fs-extravaganza');
+const getInputFile = require('../helpers/get-input-file');
 
 const { part1 } = require('./part1.js');
 const { part2 } = require('./part2.js');
@@ -11,14 +10,12 @@ const { part2 } = require('./part2.js');
 // Public
 
 function main() {
-  const input = fs
-    .readFileSync(path.resolve(__dirname, '../../data/input-02.data'))
-    .toString()
-    .split('\n');
+  const input = fs.readArraySync(getInputFile(2));
+
   const result1 = part1(input);
   const result2 = part2(input);
 
-  console.log(JSON.stringify({ result1, result2 }, null, 2));
+  displayOutput(result1, result2);
 }
 
 main();
