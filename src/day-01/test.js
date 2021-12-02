@@ -1,18 +1,16 @@
-// Libraries
+// Functions to Test
+const part1 = require('./part1.js');
+const part2 = require('./part2.js');
 
-// Dependencies
-
-const { run1, run2 } = require('./index.js');
-
-// Private
+// Test Input
 const input = [199, 200, 208, 210, 200, 207, 240, 269, 260, 263];
 
-// Tests
+// Test Specs
 
 test('D01-1: processing sample data should equal 7', async () => {
-  expect(await run1(input)).toEqual(7);
+  expect(await part1(input)).toEqual(7);
 });
 
 test('D01-2: processing sample data should equal 5', async () => {
-  expect(await run2(input)).toEqual(5);
+  expect(await part2(input)).toEqual(5);
 });
