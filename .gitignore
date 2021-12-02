@@ -23,5 +23,5 @@ jspm_packages/
 .DS_Store
 
 # Advent of Code Input Files
-./**/input.txt
-./**/input.json
+input.txt
+input.json
