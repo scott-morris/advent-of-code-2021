@@ -10,7 +10,7 @@ const { part2 } = require('./part2.js');
 // Public
 
 function main() {
-  const input = fs.readArraySync(getInputFile(-1));
+  const input = fs.readArraySync(getInputFile(3));
 
   const result1 = part1(input);
   const result2 = part2(input);

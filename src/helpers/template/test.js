@@ -9,12 +9,12 @@ const input = [];
 
 describe('day##-part1: ', () => {
   test('processing sample data should...', () => {
-    expect(part1(input)).toEqual([]);
+    expect(part1(input)).toEqual({});
   });
 });
 
 describe('day##-part2: ', () => {
   test('processing sample data should...', () => {
-    expect(part2(input)).toEqual([]);
+    expect(part2(input)).toEqual(undefined);
   });
 });

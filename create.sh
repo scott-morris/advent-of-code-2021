@@ -36,3 +36,5 @@ DAY=$(printf %02d $1)
 
 mkdir -p "src/day-${DAY}"
 cp -v ${TEMPLATE_FOLDER}/* src/day-${DAY}
+
+touch data/input-${DAY}.data
