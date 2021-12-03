@@ -9,30 +9,38 @@ const countBits = (arr, index) =>
     [0, 0]
   );
 
-// Public
-
-function getOxygen(arr, index = 0) {
+function reduceList(fn, arr, index = 0) {
   // find the most common value at `index`
   const [zeroes, ones] = countBits(arr, index);
-  // keep most common (or 1 if equal)
-  const keepValue = zeroes === ones || ones > zeroes ? '1' : '0';
 
+  // determine the value to keep
+  const keepValue = fn(zeroes, ones);
+
+  // filter the list
   const filteredList = arr.filter((str) => str[index] === keepValue);
-  return filteredList.length > 1
-    ? getOxygen(filteredList, (index + 1) % filteredList[0].length)
-    : parseInt(filteredList[0], 2);
+
+  // if we're down to the last one, return it in decimal. Otherwise, continue filtering
+  return filteredList.length === 1
+    ? parseInt(filteredList[0], 2)
+    : reduceList(fn, filteredList, (index + 1) % filteredList[0].length);
 }
 
-function getCO2(arr, index = 0) {
-  // find the least common value at `index`
-  const [zeroes, ones] = countBits(arr, index);
-  // keep least common (or 0 if equal)
-  const keepValue = zeroes === ones || ones > zeroes ? '0' : '1';
+// Public
 
-  const filteredList = arr.filter((str) => str[index] === keepValue);
-  return filteredList.length > 1
-    ? getCO2(filteredList, (index + 1) % filteredList[0].length)
-    : parseInt(filteredList[0], 2);
+function getOxygen(input) {
+  // keep most common (or 1 if equal)
+  const keepValue = (zeroes, ones) =>
+    zeroes === ones || ones > zeroes ? '1' : '0';
+
+  return reduceList(keepValue, input);
+}
+
+function getCO2(input) {
+  // keep least common (or 0 if equal)
+  const keepValue = (zeroes, ones) =>
+    zeroes === ones || ones > zeroes ? '0' : '1';
+
+  return reduceList(keepValue, input);
 }
 
 function part2(input) {
