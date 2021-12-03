@@ -40,4 +40,4 @@ function part1(input) {
   return gamma * epsilon;
 }
 
-module.exports = { transposeStringArray, countBits, getDiagnostics, part1 };
+module.exports = { getDiagnostics, part1 };

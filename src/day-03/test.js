@@ -1,6 +1,6 @@
 // Functions to Test
-const { getDiagnostics: getDiagnostics1, part1 } = require('./part1.js');
-const { getDiagnostics: getDiagnostics2, part2 } = require('./part2.js');
+const { getDiagnostics, part1 } = require('./part1.js');
+const { getOxygen, getCO2, part2 } = require('./part2.js');
 
 // Test Input
 const input = [
@@ -21,7 +21,7 @@ const input = [
 // Test Specs
 
 describe('day03-part1: ', () => {
-  const { gamma, epsilon } = getDiagnostics1(input);
+  const { gamma, epsilon } = getDiagnostics(input);
 
   test('gamma rate should be 22', () => {
     expect(gamma).toEqual(22);
@@ -37,14 +37,12 @@ describe('day03-part1: ', () => {
 });
 
 describe('day03-part2: ', () => {
-  const { oxygen, co2 } = getDiagnostics2(input);
-
   test('oxygen generator rating should be 23', () => {
-    expect(oxygen).toEqual(23);
+    expect(getOxygen(input)).toEqual(23);
   });
 
   test('co2 scrubber rate should be 10', () => {
-    expect(co2).toEqual(10);
+    expect(getCO2(input)).toEqual(10);
   });
 
   test('processing sample data should equal 230', () => {

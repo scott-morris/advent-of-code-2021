@@ -9,7 +9,9 @@ const countBits = (arr, index) =>
     [0, 0]
   );
 
-function filterOxygen(arr, index) {
+// Public
+
+function getOxygen(arr, index = 0) {
   // find the most common value at `index`
   const [zeroes, ones] = countBits(arr, index);
   // keep most common (or 1 if equal)
@@ -17,11 +19,11 @@ function filterOxygen(arr, index) {
 
   const filteredList = arr.filter((str) => str[index] === keepValue);
   return filteredList.length > 1
-    ? filterOxygen(filteredList, (index + 1) % filteredList[0].length)
-    : filteredList[0];
+    ? getOxygen(filteredList, (index + 1) % filteredList[0].length)
+    : parseInt(filteredList[0], 2);
 }
 
-function filterCO2(arr, index) {
+function getCO2(arr, index = 0) {
   // find the least common value at `index`
   const [zeroes, ones] = countBits(arr, index);
   // keep least common (or 0 if equal)
@@ -29,23 +31,15 @@ function filterCO2(arr, index) {
 
   const filteredList = arr.filter((str) => str[index] === keepValue);
   return filteredList.length > 1
-    ? filterCO2(filteredList, (index + 1) % filteredList[0].length)
-    : filteredList[0];
-}
-
-// Public
-
-function getDiagnostics(input) {
-  const oxygenBinary = filterOxygen(input, 0);
-  const co2Binary = filterCO2(input, 0);
-
-  return { oxygen: parseInt(oxygenBinary, 2), co2: parseInt(co2Binary, 2) };
+    ? getCO2(filteredList, (index + 1) % filteredList[0].length)
+    : parseInt(filteredList[0], 2);
 }
 
 function part2(input) {
-  const { oxygen, co2 } = getDiagnostics(input);
+  const oxygen = getOxygen(input);
+  const co2 = getCO2(input);
 
   return oxygen * co2;
 }
 
-module.exports = { getDiagnostics, part2 };
+module.exports = { getOxygen, getCO2, part2 };
