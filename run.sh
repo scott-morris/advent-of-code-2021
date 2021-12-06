@@ -4,12 +4,6 @@
 
 set -e
 
-# Private
-
-NUM_ARGS=$#
-THIS_FOLDER="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-TARGET_FOLDER=$1
-
 ## Color Variables ##
 
 RED='\033[00;31m'
