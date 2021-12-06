@@ -10,10 +10,10 @@ const fs = require('fs-extra');
  * @param {Object} options the options to pass along to fs.readFile
  * @returns {Array<String>}
  */
-function readArraySync(filePath, options) {
-  const raw = fs.readFileSync(filePath, options);
+function readArraySync(filePath, { delimiter = '\n', ...fsOptions } = {}) {
+  const raw = fs.readFileSync(filePath, fsOptions);
 
-  return raw.toString().split('\n');
+  return raw.toString().split(delimiter);
 }
 
 /**
