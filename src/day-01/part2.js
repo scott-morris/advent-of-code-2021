@@ -1,4 +1,4 @@
-const part1 = require('./part1.js');
+const { part1 } = require('./part1.js');
 
 function part2(input) {
   const slidingTotal = input

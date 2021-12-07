@@ -1,6 +1,5 @@
 // Functions to Test
 const parseInput = require('./parse-input.js');
-const transposeArray = require('./transpose-array.js');
 const { part1 } = require('./part1.js');
 const { runSimulation: runSimulation2, part2 } = require('./part2.js');
 
