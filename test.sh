@@ -39,7 +39,9 @@ fi
 
 # Run the `run.js` in the given folder if it can be found
 if [ -f $FILE ]; then
+    echo ""
     node $FILE
+    echo ""
 else
     echo -e "${BOLD_RED}ERROR: ${RED}File \"${FILE}\" does not exist${RESET}"
     exit 1
