@@ -71,8 +71,7 @@ describe('day04-part1: ', () => {
 });
 
 describe('day04-part2: ', () => {
-  const { losingCard, losingCardScore, losingNumber } =
-    runSimulation2(parsedInput);
+  const { losingCardScore, losingNumber } = runSimulation2(parsedInput);
 
   test('the losing card score should be 148', () => {
     expect(losingCardScore).toEqual(148);
