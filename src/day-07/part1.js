@@ -2,13 +2,15 @@
 
 const math = require('../helpers/math');
 
-// Private
+// Public
 
-function calculateCost(input, target) {
-  return input.reduce((sum, value) => sum + Math.abs(value - target), 0);
+function cost(value, target) {
+  return Math.abs(value - target);
 }
 
-// Public
+function calculateCost(input, target) {
+  return input.reduce((sum, value) => sum + cost(value, target), 0);
+}
 
 function part1(input) {
   const avg = math.average(input);
@@ -24,4 +26,4 @@ function part1(input) {
   return Math.min(...costs);
 }
 
-module.exports = { part1 };
+module.exports = { cost, calculateCost, part1 };

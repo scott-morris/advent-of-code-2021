@@ -2,16 +2,15 @@
 
 const math = require('../helpers/math');
 
-// Private
+// Public
 
-function calculateCost(input, target) {
-  return input.reduce(
-    (sum, value) => sum + math.factorial(Math.abs(value - target)),
-    0
-  );
+function cost(value, target) {
+  return math.factorial(Math.abs(value - target));
 }
 
-// Public
+function calculateCost(input, target) {
+  return input.reduce((sum, value) => sum + cost(value, target), 0);
+}
 
 function part2(input) {
   const median = math.median(input);
@@ -27,4 +26,4 @@ function part2(input) {
   return Math.min(...costs);
 }
 
-module.exports = { part2 };
+module.exports = { cost, calculateCost, part2 };
