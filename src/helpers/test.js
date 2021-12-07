@@ -29,7 +29,8 @@ describe('math.js: ', () => {
 
   describe('median', () => {
     test('it should calculate median correctly', () => {
-      expect(median([3, 5, 4, 4, 1, 1, 2, 3])).toEqual(3);
+      expect(median([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).toEqual(4.5);
+      expect(median([1, 2, 3, 4, 5, 6, 7, 8, 9])).toEqual(5);
     });
   });
 
@@ -44,6 +45,7 @@ describe('math.js: ', () => {
       expect(round(13.284434142114991, 8)).toEqual(13.28443414);
       expect(round(13.284434142114991, 4)).toEqual(13.2844);
       expect(round(13.284434142114991, 1)).toEqual(13.3);
+      expect(round(13.284434142114991, 0)).toEqual(13);
       expect(round(Math.PI, 2)).toEqual(3.14);
     });
   });
@@ -54,6 +56,13 @@ describe('math.js: ', () => {
 
       // test at 8 decimal places for consistency
       expect(round(result, 8)).toEqual(13.28443414);
+    });
+
+    test('it should calculate stdDev with population correctly', () => {
+      const result = stdDev([10, 2, 38, 23, 38, 23, 21], true);
+
+      // test at 8 decimal places for consistency
+      expect(round(result, 8)).toEqual(12.29899614);
     });
   });
 
