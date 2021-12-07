@@ -26,8 +26,12 @@ fi
 
 # Get the 2-digit day
 DAY=$(printf %02d $1)
+FILE=./src/day-${DAY}/run.js
 
-# TODO: Check for existence of folder/file. Give user-friendly error message if not exist
-
-# Run the `run.js` in the given folder
-node ./src/day-${DAY}/run.js
+# Run the `run.js` in the given folder if it can be found
+if [ -f $FILE ]; then
+    node $FILE
+else
+    echo -e "${BOLD_RED}ERROR: ${RED}File \"${FILE}\" does not exist${RESET}"
+    exit 1
+fi

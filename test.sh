@@ -26,11 +26,21 @@ fi
 
 # Get the 2-digit day
 DAY=$(printf %02d $1)
-
-# TODO: Check for existence of folder/file. Give user-friendly error message if not exist
+TESTFILE=./src/day-${DAY}/test.js
+FILE=./src/day-${DAY}/run.js
 
 # Run jest on the test.js in the given folder
-npx jest ./src/day-${DAY}/test.js
+if [ -f $TESTFILE ]; then
+    npx jest $TESTFILE
+else
+    echo -e "${BOLD_RED}ERROR: ${RED}Test file \"${TESTFILE}\" does not exist${RESET}"
+    exit 1
+fi
 
-# Run the `run.js` in the given folder
-node ./src/day-${DAY}/run.js
+# Run the `run.js` in the given folder if it can be found
+if [ -f $FILE ]; then
+    node $FILE
+else
+    echo -e "${BOLD_RED}ERROR: ${RED}File \"${FILE}\" does not exist${RESET}"
+    exit 1
+fi
