@@ -3,9 +3,10 @@
 const displayOutput = require('../helpers/display-output');
 const fs = require('../helpers/fs-extravaganza');
 const getInputFile = require('../helpers/get-input-file');
+const timeExecution = require('../helpers/time-execution');
 
-const { part1 } = require('./part1.js');
-const { part2 } = require('./part2.js');
+const { part1 } = timeExecution(require('./part1.js'));
+const { part2 } = timeExecution(require('./part2.js'));
 
 // Public
 

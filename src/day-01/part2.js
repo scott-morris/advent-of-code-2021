@@ -1,6 +1,6 @@
 const part1 = require('./part1.js');
 
-module.exports = function run2(input) {
+function part2(input) {
   const slidingTotal = input
     .map((value, idx) => {
       if (idx > input.length - 3) {
@@ -11,4 +11,6 @@ module.exports = function run2(input) {
     .filter(Boolean);
 
   return part1(slidingTotal);
-};
+}
+
+module.exports = { part2 };
