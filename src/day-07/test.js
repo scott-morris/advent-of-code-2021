@@ -1,5 +1,4 @@
 // Functions to Test
-const parseInput = require('./parse-input.js');
 const { part1 } = require('./part1.js');
 const { part2 } = require('./part2.js');
 
@@ -14,8 +13,8 @@ describe('day07-part1: ', () => {
   });
 });
 
-// describe('day07-part2: ', () => {
-//   test('processing sample data should equal...', () => {
-//     expect(part2(input)).toEqual(undefined);
-//   });
-// });
+describe('day07-part2: ', () => {
+  test('processing sample data should equal 168', () => {
+    expect(part2(input)).toEqual(168);
+  });
+});

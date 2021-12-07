@@ -10,7 +10,7 @@ const { part2 } = require('./part2.js');
 // Public
 
 function main() {
-  const input = fs.readArraySync(getInputFile(7), { delimiter: ',' });
+  const input = fs.readNumbersSync(getInputFile(7), { delimiter: ',' });
 
   const result1 = part1(input);
   const result2 = part2(input);

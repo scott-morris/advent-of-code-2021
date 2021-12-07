@@ -1,10 +1,68 @@
 // Dependencies
 
-const { transpose } = require('./math');
+const {
+  factorial,
+  mean,
+  median,
+  mode,
+  round,
+  stdDev,
+  sum,
+  transpose,
+} = require('./math');
 
 // Tests
 
 describe('math.js: ', () => {
+  describe('factorial', () => {
+    test('it should calculate factorial correctly', () => {
+      expect(factorial(3)).toEqual(6);
+      expect(factorial(4)).toEqual(10);
+    });
+  });
+
+  describe('mean', () => {
+    test('it should calculate mean correctly', () => {
+      expect(mean([3, 5, 4, 4, 1, 1, 2, 3])).toEqual(2.875);
+    });
+  });
+
+  describe('median', () => {
+    test('it should calculate median correctly', () => {
+      expect(median([3, 5, 4, 4, 1, 1, 2, 3])).toEqual(3);
+    });
+  });
+
+  describe('mode', () => {
+    test('it should calculate mode correctly', () => {
+      expect(mode([3, 5, 4, 4, 1, 1, 2, 3])).toEqual([1, 3, 4]);
+    });
+  });
+
+  describe('round', () => {
+    test('it should round to the number of places', () => {
+      expect(round(13.284434142114991, 8)).toEqual(13.28443414);
+      expect(round(13.284434142114991, 4)).toEqual(13.2844);
+      expect(round(13.284434142114991, 1)).toEqual(13.3);
+      expect(round(Math.PI, 2)).toEqual(3.14);
+    });
+  });
+
+  describe('stdDev', () => {
+    test('it should calculate stdDev correctly', () => {
+      const result = stdDev([10, 2, 38, 23, 38, 23, 21]);
+
+      // test at 8 decimal places for consistency
+      expect(round(result, 8)).toEqual(13.28443414);
+    });
+  });
+
+  describe('sum', () => {
+    test('it should calculate sum correctly', () => {
+      expect(sum([3, 5, 4, 4, 1, 1, 2, 3])).toEqual(23);
+    });
+  });
+
   describe('transpose', () => {
     test('it should transpose a 2-dimensional array', () => {
       const input = [
