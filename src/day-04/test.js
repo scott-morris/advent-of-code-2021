@@ -65,23 +65,6 @@ describe('day04-parse-input: ', () => {
   });
 });
 
-describe('day04-transpose-array: ', () => {
-  test('it should transpose a 2-dimensional array', () => {
-    const input = [
-      [1, 2, 3],
-      [4, 5, 6],
-      [7, 8, 9],
-    ];
-    const expectedOutput = [
-      [1, 4, 7],
-      [2, 5, 8],
-      [3, 6, 9],
-    ];
-
-    expect(transposeArray(input)).toEqual(expectedOutput);
-  });
-});
-
 describe('day04-part1: ', () => {
   test('processing sample data should equal 4512', () => {
     expect(part1(parsedInput)).toEqual(4512);

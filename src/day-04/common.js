@@ -1,6 +1,6 @@
 // Dependencies
 
-const transposeArray = require('./transpose-array');
+const { transpose } = require('../helpers/math');
 
 // Public
 
@@ -11,7 +11,7 @@ function callNumber(num, cards) {
 }
 
 function isWinner(card) {
-  const combinations = [...card, ...transposeArray(card)];
+  const combinations = [...card, ...transpose(card)];
   return combinations.some((combo) => combo.every((item) => item === 'x'));
 }
 
