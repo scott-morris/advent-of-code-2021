@@ -11,6 +11,9 @@ const path = require('path');
  */
 function getInputFile(dayNumber) {
   const paddedNumber = dayNumber.toString().padStart(2, '0').slice(-2);
+
+  // TODO: check for existence of file. If it does not exist, provide a user-friendly error message.
+
   return path.resolve(__dirname, `../../data/input-${paddedNumber}.data`);
 }
 

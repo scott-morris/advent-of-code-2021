@@ -34,6 +34,8 @@ fi
 # Get the 2-digit day
 DAY=$(printf %02d $1)
 
+# TODO: check for existence of folder; prompt for overwrite
+
 mkdir -p "src/day-${DAY}"
 cp -v ${TEMPLATE_FOLDER}/* src/day-${DAY}
 

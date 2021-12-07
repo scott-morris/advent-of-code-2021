@@ -27,5 +27,7 @@ fi
 # Get the 2-digit day
 DAY=$(printf %02d $1)
 
+# TODO: Check for existence of folder/file. Give user-friendly error message if not exist
+
 # Run the `run.js` in the given folder
 node ./src/day-${DAY}/run.js

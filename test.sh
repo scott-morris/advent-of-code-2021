@@ -27,6 +27,8 @@ fi
 # Get the 2-digit day
 DAY=$(printf %02d $1)
 
+# TODO: Check for existence of folder/file. Give user-friendly error message if not exist
+
 # Run jest on the test.js in the given folder
 npx jest ./src/day-${DAY}/test.js
 
