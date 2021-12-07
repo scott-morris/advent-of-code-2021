@@ -9,18 +9,38 @@ const _factorial = memoize(factorial);
 
 // Public
 
+/**
+ * Get the sum of an array of numbers
+ * @param {Array<Number>} arr array of numbers to sum
+ * @returns {Number}
+ */
 function sum(arr) {
   return arr.reduce((a, b) => a + b);
 }
 
+/**
+ * Get the factorial of the given number
+ * @param {Number} number the number to calculate
+ * @returns {Number}
+ */
 function factorial(number) {
   return number === 0 ? number : number + _factorial(number - 1);
 }
 
+/**
+ * Get the mean (average) of an array of numbers
+ * @param {Array<Number>} arr the array of numbers
+ * @returns {Number}
+ */
 function mean(arr) {
   return sum(arr) / arr.length;
 }
 
+/**
+ * Get the median of an array of numbers
+ * @param {Array<Number>} arr the array of numbers
+ * @returns {Number}
+ */
 function median(arr) {
   const numbers = [...arr];
   const len = numbers.length;
@@ -30,6 +50,11 @@ function median(arr) {
     : numbers[(len - 1) / 2]; // the middle number only
 }
 
+/**
+ * Get the mode of an array of numbers
+ * @param {Array<Number>} arr the array of numbers
+ * @returns {Array<Number>} the list of numbers that occur most often
+ */
 function mode(arr) {
   const modes = [];
   const count = {};
@@ -49,12 +74,24 @@ function mode(arr) {
   return modes;
 }
 
+/**
+ * Round a given number to a specific number of places
+ * @param {Number} number the number to round
+ * @param {Number} [places = 0] the number of places to round the number
+ * @returns {Number} the number rounded to the number of places
+ */
 function round(number, places = 0) {
   return places === 0
     ? parseInt(number, 10)
     : parseFloat(number.toFixed(places));
 }
 
+/**
+ * Get the Standard Deviation from an array of numbers
+ * @param {Array<Number>} arr the array of numbers
+ * @param {Boolean} usePopulation whether to use the population
+ * @returns {Number}
+ */
 const stdDev = (arr, usePopulation = false) => {
   const meanValue = mean(arr);
   return Math.sqrt(
@@ -65,6 +102,11 @@ const stdDev = (arr, usePopulation = false) => {
   );
 };
 
+/**
+ * Transpose a 2-dimensional array
+ * @param {Array<Array<Number>>} arr the 2-dimensional array (matrix) of numbers
+ * @returns {Array<Array<Number>>} the transposed 2-dimensional array
+ */
 function transpose(arr) {
   const output = [];
 
