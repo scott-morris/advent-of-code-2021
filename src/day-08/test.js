@@ -1,7 +1,7 @@
 // Functions to Test
 const parseInput = require('./parse-input.js');
 const { countUniqueDigits, part1 } = require('./part1.js');
-const { mapSignals, translateOutput, part2 } = require('./part2.js');
+const { Digit, translateOutput, part2 } = require('./part2.js');
 
 // Test Input
 const input = [
@@ -205,20 +205,181 @@ describe('day08-part2: ', () => {
     output: ['cdfeb', 'fcadb', 'cdfeb', 'cdbaf'],
   };
 
-  test('it should identify the correct configuration', () => {
-    expect(mapSignals(example)).toEqual({
-      a: 0b0000100,
-      b: 0b0100000,
-      c: 0b1000000,
-      d: 0b0000001,
-      e: 0b0000010,
-      f: 0b0001000,
-      g: 0b0010000,
+  describe('when not given a known signal pattern', () => {
+    let digit;
+
+    beforeEach(() => {
+      digit = new Digit();
+    });
+
+    test('it should start with all signals potentially matching any position', () => {
+      expect(digit.map).toEqual({
+        a: 0b1111111,
+        b: 0b1111111,
+        c: 0b1111111,
+        d: 0b1111111,
+        e: 0b1111111,
+        f: 0b1111111,
+        g: 0b1111111,
+      });
+    });
+
+    test('it should narrow down when given 2 letters', () => {
+      digit.processSignal('ab');
+      expect(digit.map).toEqual({
+        a: 0b0100100,
+        b: 0b0100100,
+        c: 0b1011011,
+        d: 0b1011011,
+        e: 0b1011011,
+        f: 0b1011011,
+        g: 0b1011011,
+      });
+    });
+
+    test('it should narrow down when given 3 letters', () => {
+      digit.processSignal('dab');
+      expect(digit.map).toEqual({
+        a: 0b0100101,
+        b: 0b0100101,
+        c: 0b1011010,
+        d: 0b0100101,
+        e: 0b1011010,
+        f: 0b1011010,
+        g: 0b1011010,
+      });
+    });
+
+    test('it should narrow down when given 4 letters', () => {
+      digit.processSignal('eafb');
+      expect(digit.map).toEqual({
+        a: 0b0101110,
+        b: 0b0101110,
+        c: 0b1010001,
+        d: 0b1010001,
+        e: 0b0101110,
+        f: 0b0101110,
+        g: 0b1010001,
+      });
+    });
+
+    test('it should not narrow down when given 5, 6 or 7 letters', () => {
+      digit.processSignal('acedgfb');
+      digit.processSignal('cagedb');
+      digit.processSignal('cdfbe');
+      expect(digit.map).toEqual({
+        a: 0b1111111,
+        b: 0b1111111,
+        c: 0b1111111,
+        d: 0b1111111,
+        e: 0b1111111,
+        f: 0b1111111,
+        g: 0b1111111,
+      });
+    });
+
+    test('it should narrow down with multiple passes', () => {
+      digit.processSignals(
+        ['acedgfb', 'cdfbe', 'gcdfa', 'fbcad', 'dab'],
+        false
+      );
+
+      // apply 3 character mask: 0b0100101
+      expect(digit.map).toEqual({
+        a: 0b0100101,
+        b: 0b0100101,
+        c: 0b1011010,
+        d: 0b0100101,
+        e: 0b1011010,
+        f: 0b1011010,
+        g: 0b1011010,
+      });
+
+      digit.processSignals(['cefabd', 'cdfgeb', 'eafb'], false);
+
+      // apply 4 character mask: 0b0101110
+      expect(digit.map).toEqual({
+        a: 0b0100100,
+        b: 0b0100100,
+        c: 0b1010000,
+        d: 0b0000001,
+        e: 0b0001010,
+        f: 0b0001010,
+        g: 0b1010000,
+      });
+
+      digit.processSignals(['cagedb', 'ab'], false);
+      // apply 2 character mask: 0b0100100
+      expect(digit.map).toEqual({
+        a: 0b0100100,
+        b: 0b0100100,
+        c: 0b1010000,
+        d: 0b0000001,
+        e: 0b0001010,
+        f: 0b0001010,
+        g: 0b1010000,
+      });
+    });
+
+    test('it should identify the correct configuration', () => {
+      digit.processSignals([...example.signal, ...example.output]);
+
+      expect(digit.map).toEqual({
+        a: 0b0000100,
+        b: 0b0100000,
+        c: 0b1000000,
+        d: 0b0000001,
+        e: 0b0000010,
+        f: 0b0001000,
+        g: 0b0010000,
+      });
     });
   });
 
-  test('it should translate the output based on the signal', () => {
-    expect(translateOutput(example)).toEqual(5353);
+  describe('when given a known signal pattern', () => {
+    let knownDigit;
+
+    beforeEach(() => {
+      knownDigit = new Digit({
+        a: 0b0000100,
+        b: 0b0100000,
+        c: 0b1000000,
+        d: 0b0000001,
+        e: 0b0000010,
+        f: 0b0001000,
+        g: 0b0010000,
+      });
+    });
+
+    test('it should translate be created as expected', () => {
+      expect(knownDigit.map).toEqual({
+        a: 0b0000100,
+        b: 0b0100000,
+        c: 0b1000000,
+        d: 0b0000001,
+        e: 0b0000010,
+        f: 0b0001000,
+        g: 0b0010000,
+      });
+    });
+
+    test('it should translate a digit based on the signal', () => {
+      expect(knownDigit.translateDigit('acedgfb')).toEqual(8);
+      expect(knownDigit.translateDigit('cdfbe')).toEqual(5);
+      expect(knownDigit.translateDigit('gcdfa')).toEqual(2);
+      expect(knownDigit.translateDigit('fbcad')).toEqual(3);
+      expect(knownDigit.translateDigit('dab')).toEqual(7);
+      expect(knownDigit.translateDigit('cefabd')).toEqual(9);
+      expect(knownDigit.translateDigit('cdfgeb')).toEqual(6);
+      expect(knownDigit.translateDigit('eafb')).toEqual(4);
+      expect(knownDigit.translateDigit('cagedb', true)).toEqual('1110111');
+      expect(knownDigit.translateDigit('cagedb')).toEqual(0);
+      expect(knownDigit.translateDigit('ab')).toEqual(1);
+    });
+
+    test('it should translate the output based on the signal', () => {
+      expect(knownDigit.translate(example.output)).toEqual(5353);
+    });
   });
 
   test('processing sample data should equal 61229', () => {

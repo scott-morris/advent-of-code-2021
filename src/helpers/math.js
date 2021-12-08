@@ -19,6 +19,24 @@ function sum(arr) {
 }
 
 /**
+ * Get the unique items in an array and how many times they appear
+ * @param {Array<*>|Object} val array of primitive values
+ * @returns {Map}
+ */
+function countValues(val) {
+  return Array.isArray(val)
+    ? val.reduce((res, item) => {
+        res.set(item, (res?.get(item) ?? 0) + 1);
+        return res;
+      }, new Map())
+    : Object.keys(val).reduce((res, key) => {
+        const item = val[key];
+        res.set(item, (res?.get(item) ?? 0) + 1);
+        return res;
+      }, new Map());
+}
+
+/**
  * Get the factorial of the given number
  * @param {Number} number the number to calculate
  * @returns {Number}
@@ -122,6 +140,7 @@ function transpose(arr) {
 
 module.exports = {
   average: mean,
+  countValues,
   factorial,
   mean,
   median,
