@@ -25,8 +25,8 @@ display_usage (){
 }
 
 create_folder (){
-    mkdir -p "src/day-$1"
-    cp -v ${TEMPLATE_FOLDER}/* src/day-$1
+    mkdir -p $1
+    cp -v ${TEMPLATE_FOLDER}/* $1
 }
 
 # Check to see if arguments weren't given
