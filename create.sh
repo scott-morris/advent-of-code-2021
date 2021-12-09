@@ -38,7 +38,7 @@ fi
 
 # Get the 2-digit day
 DAY=$(printf %02d $1)
-FOLDER="src/day-$1"
+FOLDER="src/day-$DAY"
 
 # If the folder exists, ask before overwriting
 if [ -d $FOLDER ]; then
