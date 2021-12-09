@@ -1,7 +1,7 @@
 // Functions to Test
 const parseInput = require('./parse-input.js');
 const { getLowPoints, part1 } = require('./part1.js');
-const { part2 } = require('./part2.js');
+const { getBasinSize, part2 } = require('./part2.js');
 
 // Test Input
 const input = [
@@ -28,8 +28,9 @@ describe('day09-parse-input: ', () => {
 });
 
 describe('day09-part1: ', () => {
-  test('it should correctly identify the low points', () => {
-    expect(getLowPoints(parsedInput)).toEqual([1, 0, 5, 5]);
+  test('it should correctly identify the low point values', () => {
+    const result = getLowPoints(parsedInput);
+    expect(result.map(({ val }) => val)).toEqual([1, 0, 5, 5]);
   });
 
   test('processing sample data should equal 15', () => {
@@ -37,8 +38,25 @@ describe('day09-part1: ', () => {
   });
 });
 
-// describe('day09-part2: ', () => {
-//   test('processing sample data should equal...', () => {
-//     expect(part2(parsedInput)).toEqual(undefined);
-//   });
-// });
+describe('day09-part2: ', () => {
+  test('it should correctly identify the low point coords', () => {
+    const result = getLowPoints(parsedInput);
+    expect(result.map(({ x, y }) => [x, y])).toEqual([
+      [1, 0],
+      [9, 0],
+      [2, 2],
+      [6, 4],
+    ]);
+  });
+
+  test('it should correctly calculate the basin size', () => {
+    expect(getBasinSize(parsedInput, [1, 0])).toEqual(3);
+    expect(getBasinSize(parsedInput, [9, 0])).toEqual(9);
+    expect(getBasinSize(parsedInput, [2, 2])).toEqual(14);
+    expect(getBasinSize(parsedInput, [6, 4])).toEqual(9);
+  });
+
+  test('processing sample data should equal 1134', () => {
+    expect(part2(parsedInput)).toEqual(1134);
+  });
+});
