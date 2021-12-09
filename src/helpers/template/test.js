@@ -16,13 +16,13 @@ describe('day##-parse-input: ', () => {
 });
 
 describe('day##-part1: ', () => {
-  test('processing sample data should equal...', () => {
-    expect(part1(parsedInput)).toEqual(0);
+  test('processing sample data should equal 99999', () => {
+    expect(part1(parsedInput)).toEqual(99999);
   });
 });
 
 // describe('day##-part2: ', () => {
-//   test('processing sample data should equal...', () => {
-//     expect(part2(parsedInput)).toEqual(undefined);
+//   test('processing sample data should equal 99999', () => {
+//     expect(part2(parsedInput)).toEqual(99999);
 //   });
 // });
