@@ -1,4 +1,5 @@
 # Advent of Code 2021 - Day 2
+*(from Day 8 perspective)*
 
 ## Part 1
 

@@ -1,4 +1,7 @@
-# advent-of-code-2021
+# Advent of Code 2021
+
+My attempts at the [Advent of Code](https://adventofcode.com/2021/) challenges for 2021. For more about the individual solutions or thought processes, you can read [my notes](src/readme.md).
+
 
 ## Getting Started
 
