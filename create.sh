@@ -54,5 +54,11 @@ else
     create_folder $FOLDER
 fi
 
-# This doesn't impact an already existing file
-touch data/input-${DAY}.data
+while true; do
+    read -p "Download the input file? (y/n) " DOWNLOAD
+    case $DOWNLOAD in
+        [Yy]* ) ./getinput.sh $1; break;;
+        [Nn]* ) touch data/input-${DAY}.data; break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
