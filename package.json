@@ -2,8 +2,10 @@
   "name": "advent-of-code-2021",
   "version": "1.0.0",
   "description": "Advent of Code (2021)",
-  "main": "index.js",
+  "main": "next.config.js",
   "scripts": {
+    "build": "next build",
+    "dev": "next",
     "test": "jest"
   },
   "repository": {
@@ -31,9 +33,15 @@
     "prettier-airbnb-config": "^1.0.0"
   },
   "dependencies": {
+    "@code-hike/mdx": "^0.3.0--canary.77.045c5cf.0",
+    "@mdx-js/loader": "^1.6.22",
+    "@mdx-js/react": "^1.6.22",
     "chalk": "^4.1.2",
     "console-table-printer": "^2.10.0",
     "fs-extra": "^10.0.0",
-    "jsdom": "^19.0.0"
+    "jsdom": "^19.0.0",
+    "next": "^12.0.7",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   }
 }
