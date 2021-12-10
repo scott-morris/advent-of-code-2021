@@ -1,5 +1,5 @@
 const { remarkCodeHike } = require('@code-hike/mdx');
-// const theme = require('shiki/themes/monokai.json');
+const theme = require('shiki/themes/monokai.json');
 
 module.exports = {
   experimental: { esmExternals: true },
@@ -13,7 +13,7 @@ module.exports = {
           loader: '@mdx-js/loader',
           /** @type {import('@mdx-js/loader').Options} */
           options: {
-            remarkPlugins: [[remarkCodeHike, {}]],
+            remarkPlugins: [[remarkCodeHike, { theme }]],
           },
         },
       ],

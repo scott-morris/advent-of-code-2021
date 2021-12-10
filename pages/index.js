@@ -1,5 +1,9 @@
-function HomePage() {
-  return <div>Welcome to Next.js!</div>;
-}
+import Foo from "../content/foo.mdx";
 
-export default HomePage;
+export default function Page() {
+  return (
+    <div style={{ width: 900, margin: "0 auto" }}>
+      <Foo />
+    </div>
+  );
+}

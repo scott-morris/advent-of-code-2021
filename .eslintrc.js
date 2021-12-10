@@ -48,5 +48,9 @@ module.exports = {
         jest: true,
       },
     },
+    {
+      files: 'pages/*,content/*',
+      extends: ['plugin:@next/next/recommended', 'eslint:recommended', 'next'],
+    },
   ],
 };
