@@ -35,13 +35,13 @@
   },
   "dependencies": {
     "@code-hike/mdx": "^0.3.0-next.14",
-    "@mdx-js/loader": "^1.6.22",
-    "@mdx-js/react": "^1.6.22",
+    "@mdx-js/loader": "^2.0.0-rc.2",
+    "@mdx-js/react": "^2.0.0-rc.2",
     "chalk": "^4.1.2",
     "console-table-printer": "^2.10.0",
     "fs-extra": "^10.0.0",
     "jsdom": "^19.0.0",
-    "next": "^12.0.7",
+    "next": "^12.0.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   }
