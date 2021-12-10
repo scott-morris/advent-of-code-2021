@@ -1,18 +1,17 @@
 // Libraries
 
 const { Table } = require('console-table-printer');
-const { round } = require('./math');
 
 // Dependencies
 
-const math = require('./math');
+const { round } = require('./math');
 
 // Private
 
 function processResults(result1, result2) {
   return [result1, result2]
     .filter((r) => r !== undefined)
-    .map(({ result, duration }, i) => ({
+    .map(({ result, duration = -1 }, i) => ({
       Part: i + 1,
       Result: result,
       Duration: `${round(duration, 4)} s`,

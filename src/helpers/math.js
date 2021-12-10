@@ -62,7 +62,7 @@ function mean(arr) {
 function median(arr) {
   const numbers = [...arr];
   const len = numbers.length;
-  numbers.sort();
+  numbers.sort((a, b) => a - b);
   return len % 2 === 0
     ? (numbers[len / 2 - 1] + numbers[len / 2]) / 2 // average of the two middle numbers
     : numbers[(len - 1) / 2]; // the middle number only
