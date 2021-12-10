@@ -15,6 +15,8 @@ Save your input data as `input-##.data` in the `data/` folder.
 
 ## Usage
 
+### Scripts
+
 There's a script to run the `./src/day-##/run.js` file against the corresponding `input-##.data` in the `data/` folder.
 
 ```

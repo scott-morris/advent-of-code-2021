@@ -1,6 +1,7 @@
 // Dependencies
 
 const {
+  countValues,
   factorial,
   mean,
   median,
@@ -14,6 +15,37 @@ const {
 // Tests
 
 describe('math.js: ', () => {
+  describe('countValues', () => {
+    test('when given an array, it should return a Map containing the number of times a value appears in the array', () => {
+      const result = countValues(['foo', 'bar', 'foo', 'baz', 'foo', 'baz']);
+
+      expect(result).toBeInstanceOf(Map);
+
+      const parsedResult = Array.from(result, ([name, value]) => [name, value]);
+      expect(parsedResult).toEqual([
+        ['foo', 3],
+        ['bar', 1],
+        ['baz', 2],
+      ]);
+    });
+
+    test('when given an object, it should return a Map containing the number of times a value appears in a property', () => {
+      const result = countValues({
+        a: 'foo',
+        b: 'bar',
+        c: 'foo',
+      });
+
+      expect(result).toBeInstanceOf(Map);
+
+      const parsedResult = Array.from(result, ([name, value]) => [name, value]);
+      expect(parsedResult).toEqual([
+        ['foo', 2],
+        ['bar', 1],
+      ]);
+    });
+  });
+
   describe('factorial', () => {
     test('it should calculate factorial correctly', () => {
       expect(factorial(3)).toEqual(6);
