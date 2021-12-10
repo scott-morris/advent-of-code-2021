@@ -24,12 +24,18 @@ if [[ $# -eq 0 ]]; then
     exit 1
 fi
 
+# if testing helpers, let's detour here
+if [[ $1 -eq "helpers" ]]; then
+    npx jest ./src/helpers/*.spec.js
+    exit 0
+fi
+
 # Get the 2-digit day
 DAY=$(printf %02d $1)
-TESTFILE=./src/day-${DAY}/test.js
+TESTFILE=./src/day-${DAY}/*.spec.js
 FILE=./src/day-${DAY}/run.js
 
-# Run jest on the test.js in the given folder
+# Run jest on the test.spec.js in the given folder
 if [ -f $TESTFILE ]; then
     npx jest $TESTFILE
 else
