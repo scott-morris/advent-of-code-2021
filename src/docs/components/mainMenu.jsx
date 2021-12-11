@@ -22,23 +22,69 @@ import {
 const { SubMenu } = Menu;
 
 const days = [
-  { key: 'day01', name: 'Day 01', stars: 2 },
-  { key: 'day02', name: 'Day 02', stars: 2 },
-  { key: 'day03', name: 'Day 03', stars: 2 },
-  { key: 'day04', name: 'Day 04', stars: 2 },
-  { key: 'day05', name: 'Day 05', stars: 2 },
-  { key: 'day06', name: 'Day 06', stars: 2 },
-  { key: 'day07', name: 'Day 07', stars: 2 },
-  { key: 'day08', name: 'Day 08', stars: 2 },
-  { key: 'day09', name: 'Day 09', stars: 2 },
-  { key: 'day10', name: 'Day 10', stars: 2 },
+  { key: 'day01', name: 'Day 01', stars: 2, parents: ['Days'] },
+  { key: 'day02', name: 'Day 02', stars: 2, parents: ['Days'] },
+  { key: 'day03', name: 'Day 03', stars: 2, parents: ['Days'] },
+  { key: 'day04', name: 'Day 04', stars: 2, parents: ['Days'] },
+  { key: 'day05', name: 'Day 05', stars: 2, parents: ['Days'] },
+  { key: 'day06', name: 'Day 06', stars: 2, parents: ['Days'] },
+  { key: 'day07', name: 'Day 07', stars: 2, parents: ['Days'] },
+  { key: 'day08', name: 'Day 08', stars: 2, parents: ['Days'] },
+  { key: 'day09', name: 'Day 09', stars: 2, parents: ['Days'] },
+  { key: 'day10', name: 'Day 10', stars: 2, parents: ['Days'] },
 ];
+
+const helpers = [
+  {
+    key: 'output',
+    name: 'display-output',
+    icon: () => <DesktopOutlined />,
+    parents: ['Helpers'],
+  },
+  {
+    key: 'fs',
+    name: 'fs-extravaganza',
+    icon: () => <FolderOpenOutlined />,
+    parents: ['Helpers'],
+  },
+  {
+    key: 'input',
+    name: 'get-input-file',
+    icon: () => <FileOutlined />,
+    parents: ['Helpers'],
+  },
+  {
+    key: 'math',
+    name: 'math',
+    icon: () => <CalculatorOutlined />,
+    parents: ['Helpers'],
+  },
+  {
+    key: 'memoize',
+    name: 'memoize',
+    icon: () => <FileTextOutlined />,
+    parents: ['Helpers'],
+  },
+  {
+    key: 'time',
+    name: 'time-execution',
+    icon: () => <ClockCircleOutlined />,
+    parents: ['Helpers'],
+  },
+];
+
+const lookup = new Map(
+  [{ key: 'main', name: 'Overview' }, ...days, ...helpers].map(
+    ({ key, ...props }) => [key, props]
+  )
+);
 
 // Public
 
 export default function MainMenu(props) {
-  const [page, setPage] = React.useState('main');
-  const onSelect = ({ key }) => setPage(key);
+  const onSelect = ({ key }) => {
+    props?.onSelect?.(lookup.get(key));
+  };
 
   return (
     <Menu
@@ -61,24 +107,11 @@ export default function MainMenu(props) {
         ))}
       </SubMenu>
       <SubMenu key="sub2" icon={<ApiOutlined />} title="Helpers">
-        <Menu.Item key="output" icon={<DesktopOutlined />}>
-          display-output
-        </Menu.Item>
-        <Menu.Item key="fs" icon={<FolderOpenOutlined />}>
-          fs-extravaganza
-        </Menu.Item>
-        <Menu.Item key="input" icon={<FileOutlined />}>
-          get-input-file
-        </Menu.Item>
-        <Menu.Item key="math" icon={<CalculatorOutlined />}>
-          math
-        </Menu.Item>
-        <Menu.Item key="memoize" icon={<FileTextOutlined />}>
-          memoize
-        </Menu.Item>
-        <Menu.Item key="time" icon={<ClockCircleOutlined />}>
-          time-execution
-        </Menu.Item>
+        {helpers.map(({ key, icon, name }) => (
+          <Menu.Item key={key} icon={icon()}>
+            {name}
+          </Menu.Item>
+        ))}
       </SubMenu>
     </Menu>
   );

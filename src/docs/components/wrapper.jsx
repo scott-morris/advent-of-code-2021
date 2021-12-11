@@ -19,11 +19,11 @@ import {
 } from '@ant-design/icons';
 
 const { Title } = Typography;
-const { Link } = Anchor;
 
 // Dependencies
 
 import MainMenu from './mainMenu';
+import PageContent from '../content/pageContent';
 
 // Private
 
@@ -33,13 +33,15 @@ const { Header, Content, Footer, Sider } = Layout;
 
 export default function Wrapper(props) {
   const [collapsed, setCollapsed] = React.useState(false);
+  const [page, setPage] = React.useState({ key: 'main', name: 'Overview' });
 
   const onCollapse = (collapsed) => setCollapsed(collapsed);
+  const onSelect = (page) => setPage(page);
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
-        <MainMenu />
+        <MainMenu onSelect={onSelect} />
       </Sider>
       <Layout className="site-layout">
         <Header
@@ -57,14 +59,15 @@ export default function Wrapper(props) {
         </Header>
         <Content style={{ margin: '0 16px' }}>
           <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
+            {[...(page?.parents ?? []), page.name].map((crumb) => (
+              <Breadcrumb.Item>{crumb}</Breadcrumb.Item>
+            ))}
           </Breadcrumb>
           <div
             className="site-layout-background"
             style={{ padding: 24, minHeight: 360 }}
           >
-            Bill is a cat.
+            <PageContent page={page} />
           </div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>Scott Morris ©2021</Footer>
