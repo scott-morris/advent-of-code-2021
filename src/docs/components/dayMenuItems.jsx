@@ -1,9 +1,20 @@
-function DayItem () {
+// Libraries
 
-}
+import { Menu } from 'antd';
 
-export default function DayMenuItems () {
+// Private
+
+const days = [
+    { key: 'day01', name: 'Day 01' },
+    { key: 'day02', name: 'Day 02' },
+    { key: 'day03', name: 'Day 03' },
+    { key: 'day04', name: 'Day 04' },
+];
+
+// Public
+
+export default function DayMenuItems (props) {
     return (
-        <div>Foo</div>
+        <>{days.map(({key, name}) => (<Menu.Item key={key}>{name}</Menu.Item>))}</>
     )
 }
