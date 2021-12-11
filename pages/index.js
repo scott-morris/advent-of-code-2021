@@ -1,7 +1,7 @@
+// Libraries
+
 import React from 'react';
-import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
-// import './index.css';
 import { Layout, Menu, Breadcrumb } from 'antd';
 import {
   ApiOutlined,
@@ -17,6 +17,12 @@ import {
   StarFilled,
 } from '@ant-design/icons';
 
+// Dependencies
+
+import DayMenuItems from '../src/docs/components/dayMenuItems';
+
+// Private
+
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -25,15 +31,22 @@ const DayMenuItem = ({day, ...rest}) => (
   <Menu.Item key={`day${day}`}>Day ${day}</Menu.Item>
 )
 
+// Public
+
 class SiderDemo extends React.Component {
   state = {
     collapsed: false,
+    page: 'main'
   };
 
   onCollapse = collapsed => {
-    console.log(collapsed);
     this.setState({ collapsed });
   };
+
+  onSelect = (info) => {
+    const { item, key, keyPath, selectedKeys, domEvent } = info;
+    this.setState({ page: key })
+  }
 
   render() {
     const { collapsed } = this.state;
@@ -41,8 +54,8 @@ class SiderDemo extends React.Component {
       <Layout style={{ minHeight: '100vh' }}>
         <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
           <div className="logo" />
-          <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-            <Menu.Item key="0" icon={<PieChartOutlined />}>
+          <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" onSelect={this.onSelect}>
+            <Menu.Item key="main" icon={<PieChartOutlined />}>
               Overview
             </Menu.Item>
             <SubMenu key="sub1" icon={<CalendarOutlined />} title="Days">
@@ -93,15 +106,14 @@ class SiderDemo extends React.Component {
             <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
               Bill is a cat.
             </div>
+            <DayMenuItems />
           </Content>
-          <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+          <Footer style={{ textAlign: 'center' }}>Scott Morris ©2021</Footer>
         </Layout>
       </Layout>
     );
   }
 }
-
-// ReactDOM.render(<SiderDemo />, document.getElementById('container'));
 
 export default function Page() {
   return (
