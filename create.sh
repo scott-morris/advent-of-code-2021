@@ -8,7 +8,7 @@ set -e
 
 NUM_ARGS=$#
 THIS_FOLDER="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-TEMPLATE_FOLDER="${THIS_FOLDER}/src/helpers/template"
+TEMPLATE_FOLDER="${THIS_FOLDER}/src/template"
 TARGET_FOLDER=$1
 
 ## Color Variables ##

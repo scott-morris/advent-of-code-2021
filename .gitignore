@@ -22,6 +22,8 @@ jspm_packages/
 # System files
 .DS_Store
 
+.next
+
 # Advent of Code Input Files
 *.data
 session.env
