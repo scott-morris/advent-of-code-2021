@@ -2,30 +2,32 @@
 
 const math = require('./math');
 
+// Private
+
+function translateCoords(coords) {
+  if (Array.isArray(coords)) {
+    const [x, y] = coords;
+    return { x, y };
+  }
+
+  if (typeof coords === 'string') {
+    const [x, y] = coords.split(',');
+    return { x, y };
+  }
+
+  const { x, y } = coords;
+  return { x, y };
+}
+
 // Public
 
 /**
  * @class
  */
 class Matrix {
-  constructor(data) {
+  constructor(data = []) {
     // Convert incoming data to a 2 dimensional array
-    this.data = [...data].map((row) => [...row]);
-  }
-
-  #translateCoords(coords) {
-    if (Array.isArray(coords)) {
-      const [x, y] = coords;
-      return { x, y };
-    } else if (typeof coords === 'string') {
-      const [x, y] = coords.split(',');
-      return { x, y };
-    }
-
-    return {
-      x: coords.x,
-      y: coords.y,
-    };
+    this.data = [...data].map((row) => [...row].map(Number));
   }
 
   /**
@@ -60,24 +62,35 @@ class Matrix {
     );
   }
 
-  get(coords) {
-    const { x, y } = this.#translateCoords(coords);
+  get(coords, defaultValue = -1) {
+    const { x, y } = translateCoords(coords);
+
+    const data = this?.data?.[y]?.[x] ?? defaultValue;
 
     return {
       x,
       y,
-      data: this.data[y][x],
+      data,
     };
   }
 
-  set(coords, value) {
-    const { x, y } = this.#translateCoords(coords);
+  set(coords, value, mustExist = false) {
+    const { x, y } = translateCoords(coords);
+
+    if (x < 0 || y < 0) {
+      return;
+    }
+
+    if (mustExist && (this?.data?.[y]?.[x] ?? 'DNE') === 'DNE') {
+      return;
+    }
 
     this.data[y][x] = value;
   }
 
   getAdjacents(coords, includeDiagonals = false) {
-    const { x, y } = this.#translateCoords(coords);
+    const self = this;
+    const { x, y } = translateCoords(coords);
     const adjacents = [];
 
     // right, below, left, above
@@ -94,7 +107,9 @@ class Matrix {
       adjacents.push(this.get({ x: x + 1, y: y - 1 }));
     }
 
-    return adjacents;
+    return adjacents
+      .filter(({ x: fx, y: fy }) => (this?.data?.[fy]?.[fx] ?? 'DNE') !== 'DNE')
+      .map((c) => self.get(c));
   }
 
   transpose() {

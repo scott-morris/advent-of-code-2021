@@ -22,7 +22,9 @@ jspm_packages/
 # System files
 .DS_Store
 
+# NextJS
 .next
+out
 
 # Advent of Code Input Files
 *.data
