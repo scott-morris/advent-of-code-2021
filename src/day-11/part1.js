@@ -7,17 +7,10 @@ const { Matrix } = require('../helpers/matrix');
 class Grid {
   constructor(data) {
     this.data = new Matrix(data);
-    this.reset();
   }
 
-  get value() {
-    return this.data.data
-      .map((row) => row.map(({ value }) => value).join(','))
-      .join('\n');
-  }
-
-  reset() {
-    this.data.map((value) => ({ value, flashed: false }));
+  toJSON() {
+    return { Grid: this.data };
   }
 
   step() {
@@ -25,8 +18,8 @@ class Grid {
     let newFlash;
     let flashes = 0;
 
-    // Increase all values by one and reset the flash.
-    this.data.map(({ value }) => ({
+    // Convert to Object: Increase all values by one and add flash boolean.
+    this.data.map((value) => ({
       value: value + 1,
       flashed: false,
     }));
@@ -43,12 +36,6 @@ class Grid {
         }
 
         // flash on this node
-        console.log(
-          `Flashing on ${JSON.stringify(coords)} (${JSON.stringify({
-            value,
-            flashed,
-          })})`
-        );
         this.data.set(coords, { value, flashed: true });
 
         // indicate that there was at least one flash in this loop so we need to check again.
@@ -56,14 +43,22 @@ class Grid {
         flashes += 1;
 
         // update the adjacents
-        const adjacents = self.data.getAdjacents(coords, true);
-        adjacents.forEach(({ x, y, data }) => {
-          const adjValue = data.value;
-          self.data.set({ x, y }, { value: adjValue + 1, ...data }, true);
-        });
-        // console.log(this.value);
+        const adjacents = self.data
+          .getAdjacents(coords, {
+            includeDiagonals: true,
+          })
+          .map(({ x, y }) => `${x},${y}`);
+
+        this.data.map((initialValue, { x, y }) =>
+          adjacents.includes(`${x},${y}`)
+            ? { ...initialValue, value: initialValue.value + 1 }
+            : initialValue
+        );
       });
     } while (newFlash);
+
+    // Convert back to number: clear any that have flashed.
+    this.data.map(({ value, flashed }) => (flashed ? 0 : value));
 
     return flashes;
   }

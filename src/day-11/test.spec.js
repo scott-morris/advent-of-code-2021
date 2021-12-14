@@ -20,19 +20,43 @@ const exampleData = ['11111', '19991', '19191', '19991', '11111'];
 
 // Test Specs
 
-describe('day11-part1: ', () => {
-  test('processing small example over 3 days should equal 9', () => {
-    expect(getFlashesOverTime(exampleData, 1)).toEqual(9);
-    // expect(getFlashesOverTime(exampleData, 2)).toEqual(9);
-  });
+describe('Grid class', () => {
+  describe('using small example data', () => {
+    let grid;
+    beforeEach(() => {
+      grid = new Grid(exampleData);
+    });
 
-  test('processing sample data should equal 1656', () => {
-    // expect(part1(input)).toEqual(1656);
+    test('it should flash 9 times after one step', () => {
+      expect(grid.step()).toBe(9);
+    });
+
+    test('it should match example data after one step', () => {
+      grid.step();
+      expect(grid.data.data).toEqual([
+        [3, 4, 5, 4, 3],
+        [4, 0, 0, 0, 4],
+        [5, 0, 0, 0, 5],
+        [4, 0, 0, 0, 4],
+        [3, 4, 5, 4, 3],
+      ]);
+    });
   });
 });
 
-// describe('day11-part2: ', () => {
-//   test('processing sample data should equal 99999', () => {
-//     expect(part2(input)).toEqual(99999);
-//   });
-// });
+describe('day11-part1: ', () => {
+  test('processing small example over 2 days should equal 9', () => {
+    expect(getFlashesOverTime(exampleData, 1)).toEqual(9);
+    expect(getFlashesOverTime(exampleData, 2)).toEqual(9);
+  });
+
+  test('processing sample data should equal 1656', () => {
+    expect(part1(input)).toEqual(1656);
+  });
+});
+
+describe('day11-part2: ', () => {
+  test('processing sample data should equal 195', () => {
+    expect(part2(input)).toEqual(195);
+  });
+});

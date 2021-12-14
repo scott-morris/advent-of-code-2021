@@ -84,6 +84,10 @@ class Matrix {
     );
   }
 
+  // get length() {} // total number of elements
+  // get width() {} // length of the longest row
+  // get height() {} // number of rows
+
   get(coords, { defaultValue = -1, includeCoords = false } = {}) {
     const { x, y } = translateCoords(coords);
 
