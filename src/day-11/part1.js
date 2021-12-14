@@ -1,6 +1,6 @@
 // Dependencies
 
-const Matrix = require('../helpers/matrix');
+const { Matrix } = require('../helpers/matrix');
 
 // Public
 

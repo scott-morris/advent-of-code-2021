@@ -4,22 +4,42 @@ const math = require('./math');
 
 // Private
 
-function translateCoords(coords) {
-  if (Array.isArray(coords)) {
-    const [x, y] = coords;
-    return { x, y };
+function validateCoords({ x, y }) {
+  const parsedX = parseInt(x, 10);
+  const parsedY = parseInt(y, 10);
+
+  if (
+    parsedX !== Number(x) ||
+    parsedY !== Number(y) ||
+    parsedX < 0 ||
+    parsedY < 0
+  ) {
+    return {};
   }
 
-  if (typeof coords === 'string') {
-    const [x, y] = coords.split(',');
-    return { x, y };
-  }
-
-  const { x, y } = coords;
-  return { x, y };
+  return {
+    x: parsedX,
+    y: parsedY,
+  };
 }
 
 // Public
+
+function translateCoords(coords) {
+  let result;
+  if (Array.isArray(coords)) {
+    const [x, y] = coords;
+    result = { x, y };
+  } else if (typeof coords === 'string') {
+    const [x, y] = coords.split(',');
+    result = { x, y };
+  } else {
+    const { x, y } = coords;
+    result = { x, y };
+  }
+
+  return validateCoords(result);
+}
 
 /**
  * @class
@@ -48,6 +68,8 @@ class Matrix {
     this.data = this.data.map((row, y) =>
       row.map((val, x) => fn(val, { x, y }, self))
     );
+
+    return this.data;
   }
 
   reduce(fn, initialValue) {
@@ -62,22 +84,18 @@ class Matrix {
     );
   }
 
-  get(coords, defaultValue = -1) {
+  get(coords, { defaultValue = -1, includeCoords = false } = {}) {
     const { x, y } = translateCoords(coords);
 
-    const data = this?.data?.[y]?.[x] ?? defaultValue;
+    const value = this?.data?.[y]?.[x] ?? defaultValue;
 
-    return {
-      x,
-      y,
-      data,
-    };
+    return includeCoords ? { x, y, value } : value;
   }
 
-  set(coords, value, mustExist = false) {
+  set(coords, value, { mustExist = true } = {}) {
     const { x, y } = translateCoords(coords);
 
-    if (x < 0 || y < 0) {
+    if (x < 0 || y < 0 || x === undefined || y === undefined) {
       return;
     }
 
@@ -88,36 +106,42 @@ class Matrix {
     this.data[y][x] = value;
   }
 
-  getAdjacents(coords, includeDiagonals = false) {
+  getAdjacents(coords, { includeDiagonals = false } = {}) {
     const self = this;
     const { x, y } = translateCoords(coords);
     const adjacents = [];
 
     // right, below, left, above
-    adjacents.push(this.get({ x: x + 1, y }));
-    adjacents.push(this.get({ x, y: y + 1 }));
-    adjacents.push(this.get({ x: x - 1, y }));
-    adjacents.push(this.get({ x, y: y - 1 }));
+    adjacents.push(this.get({ x: x + 1, y }, { includeCoords: true }));
+    adjacents.push(this.get({ x, y: y + 1 }, { includeCoords: true }));
+    adjacents.push(this.get({ x: x - 1, y }, { includeCoords: true }));
+    adjacents.push(this.get({ x, y: y - 1 }, { includeCoords: true }));
 
     if (includeDiagonals) {
       // BR, BL, TL, TR
-      adjacents.push(this.get({ x: x + 1, y: y + 1 }));
-      adjacents.push(this.get({ x: x - 1, y: y + 1 }));
-      adjacents.push(this.get({ x: x - 1, y: y - 1 }));
-      adjacents.push(this.get({ x: x + 1, y: y - 1 }));
+      adjacents.push(this.get({ x: x + 1, y: y + 1 }, { includeCoords: true }));
+      adjacents.push(this.get({ x: x - 1, y: y + 1 }, { includeCoords: true }));
+      adjacents.push(this.get({ x: x - 1, y: y - 1 }, { includeCoords: true }));
+      adjacents.push(this.get({ x: x + 1, y: y - 1 }, { includeCoords: true }));
     }
 
     return adjacents
-      .filter(({ x: fx, y: fy }) => (this?.data?.[fy]?.[fx] ?? 'DNE') !== 'DNE')
-      .map((c) => self.get(c));
+      .filter(({ x: fx, y: fy }) => (self?.data?.[fy]?.[fx] ?? 'DNE') !== 'DNE')
+      .map((c) => self.get(c, { includeCoords: true }));
   }
 
   transpose() {
     this.data = math.transpose(this.data);
   }
+
+  toJSON() {
+    return {
+      Matrix: this.data,
+    };
+  }
 }
 
-module.exports = Matrix;
+module.exports = { translateCoords, Matrix };
 
 /**
  * @typedef Matrix~CoordsObject

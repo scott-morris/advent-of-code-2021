@@ -61,7 +61,7 @@ describe('math.js: ', () => {
 
   describe('median', () => {
     test('it should calculate median correctly', () => {
-      expect(median([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).toEqual(4.5);
+      expect(median([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).toEqual(5.5);
       expect(median([1, 2, 3, 4, 5, 6, 7, 8, 9])).toEqual(5);
     });
   });
