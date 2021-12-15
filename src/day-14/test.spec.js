@@ -1,7 +1,11 @@
 // Functions to Test
 const parseInput = require('./parse-input.js');
 const { performSteps, part1 } = require('./part1.js');
-const { part2, splitTemplate } = require('./part2.js');
+const {
+  processInput,
+  performSteps: performSteps2,
+  part2,
+} = require('./part2.js');
 
 // Test Input
 const input = [
@@ -86,13 +90,35 @@ describe('day14-part1: ', () => {
 });
 
 describe('day14-part2: ', () => {
-  describe('splitTemplate()', () => {
-    test(`it should split the string on the first pair that doesn't appear in the rules`, () => {
-      expect(splitTemplate({ template: 'NCNBCHB', rules: parsedInput.rules).toEqual(['', '']);
-    });
+  let processedInput;
+
+  beforeEach(() => {
+    processedInput = processInput(parsedInput);
+  });
+
+  test('it should give the same length results for 5 steps as part1', () => {
+    const result = performSteps2(processedInput, 5);
+    const count = Array.from(result.letters.values()).reduce(
+      (sum, val) => sum + val,
+      0
+    );
+    expect(count).toBe(97);
+  });
+
+  test('it should give the same length results for 10 steps as part1', () => {
+    const result = performSteps2(processedInput, 10);
+    const count = Array.from(result.letters.values()).reduce(
+      (sum, val) => sum + val,
+      0
+    );
+    expect(count).toBe(3073);
+  });
+
+  test('processing sample data should equal 1588', () => {
+    expect(part2(parsedInput, 10)).toEqual(1588);
   });
 
   test('processing sample data should equal 2188189693529', () => {
-    expect(part1(parsedInput, 40)).toEqual(2188189693529);
+    expect(part2(parsedInput, 40)).toEqual(2188189693529);
   });
 });

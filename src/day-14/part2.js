@@ -1,31 +1,79 @@
 // Dependencies
 
-const { performStep, part1 } = require('./part1');
+const { Counter } = require('../helpers/counter');
+
+// Private
+
+function processRules(rules) {
+  return rules.reduce(
+    (obj, { pair, insert }) => ({ ...obj, [pair]: insert }),
+    {}
+  );
+}
+
+function processTemplate(template) {
+  const pairs = new Counter();
+  const letters = new Counter();
+
+  template.split('').forEach((letter) => letters.increment(letter));
+
+  for (let i = 0; i < template.length - 1; i += 1) {
+    const pair = template.substring(i, i + 2);
+    pairs.increment(pair);
+  }
+
+  return {
+    pairs,
+    letters,
+  };
+}
 
 // Public
 
-function splitTemplate({ template, rules }) {
-  const pairs = rules.map(({ pair }) => pair);
-  let i;
-  for (i = 0; i < template.length - 1; i += 1) {
-    const pair = template.substring(i, i + 1);
-    if (!pairs.includes(pair)) {
-      break;
-    }
-  }
-  return i === template.length - 1
-    ? [template]
-    : [template.slice(0, i), template.slice(i)];
+function processInput({ template, rules }) {
+  return { counters: processTemplate(template), rules: processRules(rules) };
 }
 
-function performSteps({ template, rules }, numSteps) {
-  let result = template;
+function performStep({ pairs, letters }, rules) {
+  const arrPairs = Array.from(pairs.entries());
+
+  arrPairs.forEach(([pair, count]) => {
+    const insert = rules[pair];
+    const [first, second] = pair;
+
+    // remove the original pair [XY]
+    pairs.decrement(pair, count);
+
+    // add to the new pairs [XZ, ZY]
+    pairs.increment(`${first}${insert}`, count);
+    pairs.increment(`${insert}${second}`, count);
+
+    // add to the count of individual letters
+    letters.increment(insert, count);
+  });
+
+  return {
+    pairs,
+    letters,
+  };
+}
+
+function performSteps({ counters, rules }, numSteps) {
   for (let i = 0; i < numSteps; i += 1) {
-    result = performStep(result, rules);
+    performStep(counters, rules);
   }
-  return result;
+  return counters;
 }
 
-function part2(input) {}
+function part2(input, iterations = 40) {
+  const processedInput = processInput(input);
+  const results = performSteps(processedInput, iterations);
 
-module.exports = { splitTemplate, part2 };
+  const values = Array.from(results.letters.values());
+  const max = Math.max(...values);
+  const min = Math.min(...values);
+
+  return max - min;
+}
+
+module.exports = { processInput, performSteps, part2 };
