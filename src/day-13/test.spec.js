@@ -133,8 +133,16 @@ describe('day13-part1: ', () => {
   });
 });
 
-describe.skip('day13-part2: ', () => {
+describe('day13-part2: ', () => {
   test('processing sample data should equal 99999', () => {
-    expect(part2(parsedInput)).toEqual(99999);
+    expect(part2(parsedInput)).toEqual(
+      '#####\n' +
+        '#   #\n' +
+        '#   #\n' +
+        '#   #\n' +
+        '#####\n' +
+        '     \n' +
+        '     '
+    );
   });
 });

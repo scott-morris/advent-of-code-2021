@@ -19,6 +19,9 @@ function main() {
   const result2 = timeExecution(part2)(input);
 
   displayOutput(result1, result2);
+
+  console.log();
+  console.log(result2.result);
 }
 
 main();

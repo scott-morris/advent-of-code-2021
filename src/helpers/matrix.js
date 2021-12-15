@@ -166,8 +166,10 @@ class Matrix {
     if (axis === 'x') {
       const { width } = this;
       this.data = this.data.map((row) => {
-        const newRow = row.fill(null, row.length, width - 1);
-        return newRow.reverse();
+        // eslint-disable-next-line no-param-reassign
+        row[width - 1] = row[width - 1] || null;
+        row.fill(null, row.length, width - 1);
+        return row.reverse();
       });
     } else if (axis === 'y') {
       this.data.reverse();
