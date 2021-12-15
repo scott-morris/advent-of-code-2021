@@ -121,6 +121,102 @@ describe('class: Matrix', () => {
       );
     });
 
+    describe('merge()', () => {
+      matrix = new Matrix([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+      ]);
+
+      const toMerge = new Matrix();
+      toMerge.set([0, 0], 'x', { mustExist: false });
+      toMerge.set([1, 1], 'y', { mustExist: false });
+      toMerge.set([2, 2], 'z', { mustExist: false });
+
+      matrix.merge(toMerge);
+
+      expect(matrix.data).toEqual([
+        ['x', 2, 3],
+        [4, 'y', 6],
+        [7, 8, 'z'],
+      ]);
+    });
+
+    describe('flip()', () => {
+      test('flipping on the x-axis should reverse it horizontally', () => {
+        matrix.flip('x');
+        expect(matrix.data).toEqual([
+          [3, 2, 1],
+          [6, 5, 4],
+          [9, 8, 7],
+        ]);
+      });
+
+      test('flipping on the y-axis should reverse it vertically', () => {
+        matrix.flip('y');
+        expect(matrix.data).toEqual([
+          [7, 8, 9],
+          [4, 5, 6],
+          [1, 2, 3],
+        ]);
+      });
+    });
+
+    describe('split()', () => {
+      describe('includeSplit: false', () => {
+        test('when splitting on the x-axis, it should split horizontally', () => {
+          const split = matrix.split({
+            axis: 'x',
+            index: 1,
+            includeSplit: false,
+          });
+
+          expect(matrix.data).toEqual([[1], [4], [7]]);
+          expect(split.data).toEqual([[3], [6], [9]]);
+        });
+
+        test('when splitting on the y-axis, it should split vertically', () => {
+          const split = matrix.split({
+            axis: 'y',
+            index: 1,
+            includeSplit: false,
+          });
+
+          expect(matrix.data).toEqual([[1, 2, 3]]);
+          expect(split.data).toEqual([[7, 8, 9]]);
+        });
+      });
+
+      describe('includeSplit: true', () => {
+        test('when splitting on the x-axis, it should split horizontally', () => {
+          const split = matrix.split({
+            axis: 'x',
+            index: 1,
+          });
+
+          expect(matrix.data).toEqual([[1], [4], [7]]);
+          expect(split.data).toEqual([
+            [2, 3],
+            [5, 6],
+            [8, 9],
+          ]);
+        });
+
+        test('when splitting on the y-axis, it should split vertically', () => {
+          const split = matrix.split({
+            axis: 'y',
+            index: 1,
+          });
+
+          expect(matrix.data).toEqual([[1, 2, 3]]);
+          expect(split.data).toEqual([
+            [4, 5, 6],
+            [7, 8, 9],
+          ]);
+        });
+      });
+    });
+
     describe('when invalid coordinates are provided', () => {
       test('get() should return the default value', () => {
         expect(matrix.get({ x: 'foo', y: 2 }, { defaultValue: 'foo' })).toBe(
@@ -253,6 +349,49 @@ describe('class: Matrix', () => {
         expect(side).toContainEqual({ x: 0, y: 2, value: 7 });
         expect(side).toContainEqual({ x: 1, y: 2, value: 8 });
       });
+    });
+  });
+
+  describe('given a sparsely populated matrix', () => {
+    let matrix;
+    beforeEach(() => {
+      matrix = new Matrix();
+      matrix.set([0, 0], 'x', { mustExist: false });
+      matrix.set([10, 10], 'y', { mustExist: false });
+      matrix.set([20, 20], 'z', { mustExist: false });
+    });
+
+    test('length() should be the number of elements set', () => {
+      expect(matrix.length).toBe(3);
+    });
+
+    test('width() should be the widest row', () => {
+      expect(matrix.width).toBe(21);
+    });
+
+    test('height() should be the length of the outer array', () => {
+      expect(matrix.height).toBe(21);
+    });
+
+    test('forEach() should only run on the 3 elements', () => {
+      const fn = jest.fn();
+      matrix.forEach(fn);
+
+      // It should be called 3 times
+      expect(fn.mock.calls.length).toBe(3);
+
+      // Test the calls
+      expect(fn.mock.calls[0][0]).toBe('x');
+      expect(fn.mock.calls[0][1]).toEqual({ x: 0, y: 0 });
+      expect(fn.mock.calls[0][2]).toBe(matrix);
+
+      expect(fn.mock.calls[1][0]).toBe('y');
+      expect(fn.mock.calls[1][1]).toEqual({ x: 10, y: 10 });
+      expect(fn.mock.calls[1][2]).toBe(matrix);
+
+      expect(fn.mock.calls[2][0]).toBe('z');
+      expect(fn.mock.calls[2][1]).toEqual({ x: 20, y: 20 });
+      expect(fn.mock.calls[2][2]).toBe(matrix);
     });
   });
 });

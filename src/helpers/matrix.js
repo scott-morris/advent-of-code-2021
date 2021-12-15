@@ -84,9 +84,20 @@ class Matrix {
     );
   }
 
-  // get length() {} // total number of elements
-  // get width() {} // length of the longest row
-  // get height() {} // number of rows
+  get length() {
+    // total number of elements
+    return this.data.reduce((count, row) => count + Object.keys(row).length, 0);
+  }
+
+  get width() {
+    // length of the longest row
+    return this.data.reduce((widest, row) => Math.max(widest, row.length), 0);
+  }
+
+  get height() {
+    // number of rows
+    return this.data.length;
+  }
 
   get(coords, { defaultValue = -1, includeCoords = false } = {}) {
     const { x, y } = translateCoords(coords);
@@ -107,6 +118,7 @@ class Matrix {
       return;
     }
 
+    this.data[y] = this.data?.[y] ?? [];
     this.data[y][x] = value;
   }
 
@@ -132,6 +144,34 @@ class Matrix {
     return adjacents
       .filter(({ x: fx, y: fy }) => (self?.data?.[fy]?.[fx] ?? 'DNE') !== 'DNE')
       .map((c) => self.get(c, { includeCoords: true }));
+  }
+
+  flip(axis = 'y') {
+    if (axis === 'x') {
+      this.data = this.data.map((row) => row.reverse());
+    } else if (axis === 'y') {
+      this.data.reverse();
+    }
+  }
+
+  split({ axis, index, includeSplit = true } = {}) {
+    let result;
+    if (axis === 'x') {
+      result = this.data.map((row) =>
+        row.slice(includeSplit ? index : index + 1)
+      );
+      this.data = this.data.map((row) => row.slice(0, index));
+    } else if (axis === 'y') {
+      result = this.data.slice(includeSplit ? index : index + 1);
+      this.data = this.data.slice(0, index);
+    }
+
+    return new Matrix(result);
+  }
+
+  merge(matrix) {
+    const self = this;
+    matrix.forEach((value, coords) => self.set(coords, value));
   }
 
   transpose() {

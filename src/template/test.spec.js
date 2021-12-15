@@ -21,8 +21,8 @@ describe('day##-part1: ', () => {
   });
 });
 
-// describe('day##-part2: ', () => {
-//   test('processing sample data should equal 99999', () => {
-//     expect(part2(parsedInput)).toEqual(99999);
-//   });
-// });
+describe.skip('day##-part2: ', () => {
+  test('processing sample data should equal 99999', () => {
+    expect(part2(parsedInput)).toEqual(99999);
+  });
+});
