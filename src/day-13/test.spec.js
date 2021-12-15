@@ -1,6 +1,6 @@
 // Functions to Test
 const parseInput = require('./parse-input.js');
-const { generateGrid, fold, countEmpty, part1 } = require('./part1.js');
+const { generateGrid, fold, part1 } = require('./part1.js');
 const { part2 } = require('./part2.js');
 
 // Test Input
@@ -63,11 +63,70 @@ describe('day13-parse-input: ', () => {
 });
 
 describe('day13-part1: ', () => {
-  describe('generateGrid', () => {});
+  describe('generateGrid()', () => {
+    test('it should generate the grid as expected', () => {
+      const result = generateGrid(parsedInput.coords);
+      result.map((v) => (v === null ? '.' : '#'));
 
-  describe('fold', () => {});
+      expect(result.join()).toEqual(
+        '...#..#..#.\n' +
+          '....#......\n' +
+          '...........\n' +
+          '#..........\n' +
+          '...#....#.#\n' +
+          '...........\n' +
+          '...........\n' +
+          '...........\n' +
+          '...........\n' +
+          '...........\n' +
+          '.#....#.##.\n' +
+          '....#......\n' +
+          '......#...#\n' +
+          '#..........\n' +
+          '#.#........'
+      );
+    });
+  });
 
-  describe('countEmpty', () => {});
+  describe('fold()', () => {
+    let grid;
+
+    beforeEach(() => {
+      grid = generateGrid(parsedInput.coords);
+    });
+
+    test('it should fold the grid once based on the example', () => {
+      const folded = fold(grid, parsedInput.folds[0]);
+      folded.map((v) => (v === null ? '.' : '#'));
+
+      expect(folded.join()).toEqual(
+        '#.##..#..#.\n' +
+          '#...#......\n' +
+          '......#...#\n' +
+          '#...#......\n' +
+          '.#.#..#.###\n' +
+          '...........\n' +
+          '...........'
+      );
+    });
+
+    test('it should fold the grid twice based on the example', () => {
+      const folded = fold(grid, parsedInput.folds[0]);
+      fold(grid, parsedInput.folds[1]);
+
+      folded.map((v) => (v === null ? '.' : '#'));
+
+      expect(folded.join()).toEqual(
+        '#####\n' +
+          '#...#\n' +
+          '#...#\n' +
+          '#...#\n' +
+          '#####\n' +
+          '.....\n' +
+          '.....'
+      );
+    });
+  });
 
   test('processing sample data should equal 17', () => {
     expect(part1(parsedInput)).toEqual(17);

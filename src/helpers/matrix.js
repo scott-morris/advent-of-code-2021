@@ -45,9 +45,9 @@ function translateCoords(coords) {
  * @class
  */
 class Matrix {
-  constructor(data = []) {
+  constructor(data = [], { processItem = (item) => parseInt(item, 10) } = {}) {
     // Convert incoming data to a 2 dimensional array
-    this.data = [...data].map((row) => [...row].map(Number));
+    this.data = [...data].map((row) => [...(row || [])].map(processItem));
   }
 
   /**
@@ -64,10 +64,15 @@ class Matrix {
   }
 
   map(fn) {
-    const self = this;
-    this.data = this.data.map((row, y) =>
-      row.map((val, x) => fn(val, { x, y }, self))
-    );
+    const { width } = this;
+
+    for (let y = 0; y < this.data.length; y += 1) {
+      for (let x = 0; x < width; x += 1) {
+        const currentValue = this.get({ x, y }, { defaultValue: null });
+        const newValue = fn(currentValue, { x, y }, this);
+        this.set({ x, y }, newValue, { mustExist: false });
+      }
+    }
 
     return this.data;
   }
@@ -86,7 +91,16 @@ class Matrix {
 
   get length() {
     // total number of elements
-    return this.data.reduce((count, row) => count + Object.keys(row).length, 0);
+    return this.data.reduce((count, row) => {
+      if (!Array.isArray(row)) {
+        return count;
+      }
+
+      const validEntries = row.filter(
+        (entry) => entry !== undefined && entry !== null
+      );
+      return count + Object.keys(validEntries).length;
+    }, 0);
   }
 
   get width() {
@@ -111,15 +125,17 @@ class Matrix {
     const { x, y } = translateCoords(coords);
 
     if (x < 0 || y < 0 || x === undefined || y === undefined) {
-      return;
+      return this;
     }
 
     if (mustExist && (this?.data?.[y]?.[x] ?? 'DNE') === 'DNE') {
-      return;
+      return this;
     }
 
     this.data[y] = this.data?.[y] ?? [];
     this.data[y][x] = value;
+
+    return this;
   }
 
   getAdjacents(coords, { includeDiagonals = false } = {}) {
@@ -148,10 +164,15 @@ class Matrix {
 
   flip(axis = 'y') {
     if (axis === 'x') {
-      this.data = this.data.map((row) => row.reverse());
+      const { width } = this;
+      this.data = this.data.map((row) => {
+        const newRow = row.fill(null, row.length, width - 1);
+        return newRow.reverse();
+      });
     } else if (axis === 'y') {
       this.data.reverse();
     }
+    return this;
   }
 
   split({ axis, index, includeSplit = true } = {}) {
@@ -166,22 +187,33 @@ class Matrix {
       this.data = this.data.slice(0, index);
     }
 
-    return new Matrix(result);
+    return new Matrix(result, { processItem: (item) => item });
   }
 
-  merge(matrix) {
+  merge(matrix, fn = (currentValue, incomingValue) => incomingValue) {
     const self = this;
-    matrix.forEach((value, coords) => self.set(coords, value));
+    matrix.forEach((incomingValue, coords) => {
+      const currentValue = self.get(coords, { defaultValue: null });
+      const newValue = fn(currentValue, incomingValue);
+      self.set(coords, newValue, { mustExist: false });
+    });
+
+    return this;
   }
 
   transpose() {
     this.data = math.transpose(this.data);
+    return this;
   }
 
   toJSON() {
     return {
       Matrix: this.data,
     };
+  }
+
+  join({ joinX = '', joinY = '\n' } = {}) {
+    return this.data.map((row) => row.join(joinX)).join(joinY);
   }
 }
 

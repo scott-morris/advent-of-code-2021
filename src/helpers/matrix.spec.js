@@ -121,27 +121,6 @@ describe('class: Matrix', () => {
       );
     });
 
-    describe('merge()', () => {
-      matrix = new Matrix([
-        [1, 2, 3],
-        [4, 5, 6],
-        [7, 8, 9],
-      ]);
-
-      const toMerge = new Matrix();
-      toMerge.set([0, 0], 'x', { mustExist: false });
-      toMerge.set([1, 1], 'y', { mustExist: false });
-      toMerge.set([2, 2], 'z', { mustExist: false });
-
-      matrix.merge(toMerge);
-
-      expect(matrix.data).toEqual([
-        ['x', 2, 3],
-        [4, 'y', 6],
-        [7, 8, 'z'],
-      ]);
-    });
-
     describe('flip()', () => {
       test('flipping on the x-axis should reverse it horizontally', () => {
         matrix.flip('x');
@@ -284,12 +263,13 @@ describe('class: Matrix', () => {
       });
 
       test('set() should update the correct node', () => {
-        matrix.set({ x: 1, y: 1 }, 10);
+        const result = matrix.set({ x: 1, y: 1 }, 10);
         expect(matrix.data).toEqual([
           [1, 2, 3],
           [4, 10, 6],
           [7, 8, 9],
         ]);
+        expect(result).toBe(matrix);
       });
 
       test('getAdjacents(coords) should return valid adjacent nodes', () => {
@@ -349,6 +329,46 @@ describe('class: Matrix', () => {
         expect(side).toContainEqual({ x: 0, y: 2, value: 7 });
         expect(side).toContainEqual({ x: 1, y: 2, value: 8 });
       });
+    });
+  });
+
+  describe('merge()', () => {
+    let matrix;
+    let toMerge;
+
+    beforeEach(() => {
+      matrix = new Matrix([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+      ]);
+
+      toMerge = new Matrix();
+      toMerge.set([0, 0], 10, { mustExist: false });
+      toMerge.set([1, 1], -1, { mustExist: false });
+      toMerge.set([2, 2], 100, { mustExist: false });
+    });
+
+    test('when called without a function, it should replace the values', () => {
+      const result = matrix.merge(toMerge);
+
+      expect(matrix.data).toEqual([
+        [10, 2, 3],
+        [4, -1, 6],
+        [7, 8, 100],
+      ]);
+      expect(result).toBe(matrix);
+    });
+
+    test('when called with a function, it should replace the values based on that function', () => {
+      const result = matrix.merge(toMerge, (a, b) => a * b + 1);
+
+      expect(matrix.data).toEqual([
+        [11, 2, 3],
+        [4, -4, 6],
+        [7, 8, 901],
+      ]);
+      expect(result).toBe(matrix);
     });
   });
 

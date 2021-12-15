@@ -1,6 +1,6 @@
 // Dependencies
 
-const Matrix = require('../helpers/matrix');
+const { Matrix } = require('../helpers/matrix');
 
 // Public
 
@@ -10,25 +10,28 @@ function generateGrid(coords) {
   coords.forEach((coord) => {
     matrix.set(coord, '#', { mustExist: false });
   });
+
+  return matrix;
 }
 
-function fold(grid, instruction) {}
+function fold(grid, { axis, index }) {
+  if (axis !== 'x' && axis !== 'y') {
+    return grid;
+  }
 
-function countEmpty(grid) {
-  // Find out the width of the widest row
-  const width = grid.reduce((widest, row) => Math.max(widest, row.length), 0);
+  const toFold = grid.split({ axis, index, includeSplit: false });
+  toFold.flip(axis);
 
-  return grid.reduce(
-    (count, row) => count + (widest - Object.keys(row).length),
-    0
-  );
+  grid.merge(toFold, (a, b) => (a === null ? b : a));
+
+  return grid;
 }
 
 function part1(input) {
   const grid = generateGrid(input.coords);
   const folded = fold(grid, input.folds[0]);
 
-  return countEmpty(folded);
+  return folded.length;
 }
 
-module.exports = { generateGrid, fold, countEmpty, part1 };
+module.exports = { generateGrid, fold, part1 };

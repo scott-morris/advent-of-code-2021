@@ -8,7 +8,7 @@ function isLowerCase(str) {
   return str === str.toLowerCase();
 }
 
-function without(mapArray, key) {
+function copyWithout(mapArray, key) {
   const copyMapArray = new MapArray(mapArray);
   copyMapArray.removeAll(key);
   return copyMapArray;
@@ -31,7 +31,7 @@ function allPossibilities(paths, location, destination) {
     return [location];
   }
 
-  const newPath = isLowerCase(location) ? without(paths, location) : paths;
+  const newPath = isLowerCase(location) ? copyWithout(paths, location) : paths;
   const nextSteps = possibleNextSteps
     .map((nextLocation) => allPossibilities(newPath, nextLocation, destination))
     .filter((a) => Array.isArray(a) && a.length > 0)
