@@ -123,7 +123,7 @@ describe('class: Matrix', () => {
 
     describe('flip()', () => {
       test('flipping on the x-axis should reverse it horizontally', () => {
-        matrix.flip('x');
+        matrix.flip({ axis: 'x' });
         expect(matrix.data).toEqual([
           [3, 2, 1],
           [6, 5, 4],
@@ -132,12 +132,17 @@ describe('class: Matrix', () => {
       });
 
       test('flipping on the y-axis should reverse it vertically', () => {
-        matrix.flip('y');
+        matrix.flip({ axis: 'y' });
         expect(matrix.data).toEqual([
           [7, 8, 9],
           [4, 5, 6],
           [1, 2, 3],
         ]);
+      });
+
+      test('flipping on the y-axis with a given height should reverse it vertically with spaces in front', () => {
+        matrix.flip({ axis: 'y', height: 5 });
+        expect(matrix.data).toEqual([[], [], [7, 8, 9], [4, 5, 6], [1, 2, 3]]);
       });
     });
 

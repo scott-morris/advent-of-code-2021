@@ -20,8 +20,7 @@ function fold(grid, { axis, index }) {
   }
 
   const toFold = grid.split({ axis, index, includeSplit: false });
-  toFold.flip(axis);
-
+  toFold.flip({ axis, height: grid.height });
   grid.merge(toFold, (a, b) => (a === null ? b : a));
 
   return grid;

@@ -172,6 +172,10 @@ class Matrix {
         return row.reverse();
       });
     } else if (axis === 'y') {
+      this.data[height - 1] = this.data[height - 1] || [];
+      for (let i = 0; i < height; i += 1) {
+        this.data[i] = this.data[i] || [];
+      }
       this.data.reverse();
     }
     return this;
