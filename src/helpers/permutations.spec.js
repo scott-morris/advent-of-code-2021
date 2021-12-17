@@ -19,47 +19,107 @@ describe('getPermutations', () => {
       expect(result[0]).toBe(input);
     });
 
-    test('when there are permutations, it should return an array of objects with the different permutations', () => {
-      const input = {
-        foo: new Options(1, 2, 3),
-        bar: new Options('a', 'b'),
-        baz: true,
-      };
+    describe('when there are permutations with regular Options', () => {
+      test('it should return an array of objects with the different permutations', () => {
+        const input = {
+          foo: new Options(1, 2, 3),
+          bar: new Options('a', 'b'),
+          baz: true,
+        };
 
-      const result = getPermutations(input);
+        const result = getPermutations(input);
 
-      expect(result).toEqual([
-        {
-          foo: 1,
-          bar: 'a',
-          baz: true,
-        },
-        {
-          foo: 1,
-          bar: 'b',
-          baz: true,
-        },
-        {
-          foo: 2,
-          bar: 'a',
-          baz: true,
-        },
-        {
-          foo: 2,
-          bar: 'b',
-          baz: true,
-        },
-        {
-          foo: 3,
-          bar: 'a',
-          baz: true,
-        },
-        {
-          foo: 3,
-          bar: 'b',
-          baz: true,
-        },
-      ]);
+        expect(result).toEqual([
+          {
+            foo: 1,
+            bar: 'a',
+            baz: true,
+          },
+          {
+            foo: 1,
+            bar: 'b',
+            baz: true,
+          },
+          {
+            foo: 2,
+            bar: 'a',
+            baz: true,
+          },
+          {
+            foo: 2,
+            bar: 'b',
+            baz: true,
+          },
+          {
+            foo: 3,
+            bar: 'a',
+            baz: true,
+          },
+          {
+            foo: 3,
+            bar: 'b',
+            baz: true,
+          },
+        ]);
+      });
+    });
+
+    describe('when there are permutations with DynamicOptions', () => {
+      test('it should return an array of objects with the different permutations', () => {
+        const input = {
+          foo: new DynamicOptions((obj) => [obj.bar.length, obj.baz.length]),
+          bar: ['a', 'b', 'c'],
+          baz: [1, 2],
+        };
+
+        const result = getPermutations(input);
+
+        expect(result).toEqual([
+          { foo: 3, bar: ['a', 'b', 'c'], baz: [1, 2] },
+          { foo: 2, bar: ['a', 'b', 'c'], baz: [1, 2] },
+        ]);
+      });
+    });
+
+    describe('when there are permutations with both Options and DynamicOptions', () => {
+      test('it should return the array of arrays when they are separate', () => {
+        const input = {
+          foo: new DynamicOptions((obj) => [obj.bar.length, obj.baz.length]),
+          bar: new Options('a', 'b'),
+          baz: [1, 2, 3],
+        };
+
+        const result = getPermutations(input);
+
+        expect(result).toEqual([
+          { foo: 2, bar: 'a', baz: [1, 2, 3] },
+          { foo: 2, bar: 'b', baz: [1, 2, 3] },
+          { foo: 3, bar: 'a', baz: [1, 2, 3] },
+          { foo: 3, bar: 'b', baz: [1, 2, 3] },
+        ]);
+      });
+
+      test.skip('it should return the array of arrays when they are nested', () => {
+        const input = {
+          foo: new DynamicOptions(() => [new Options(1, 2), new Options(3, 4)]),
+          bar: new Options('a', 'b'),
+          baz: [1, 2, 3],
+        };
+
+        const result = getPermutations(input);
+
+        // expect(result).toEqual([]);
+        expect(result).toEqual([
+          { foo: [1, 3], bar: 'a', baz: [1, 2, 3] },
+          { foo: [1, 4], bar: 'a', baz: [1, 2, 3] },
+          { foo: [2, 3], bar: 'a', baz: [1, 2, 3] },
+          { foo: [2, 4], bar: 'a', baz: [1, 2, 3] },
+          { foo: [1, 3], bar: 'b', baz: [1, 2, 3] },
+          { foo: [1, 4], bar: 'b', baz: [1, 2, 3] },
+          { foo: [2, 3], bar: 'b', baz: [1, 2, 3] },
+          { foo: [2, 4], bar: 'b', baz: [1, 2, 3] },
+        ]);
+      });
     });
   });
 
@@ -72,8 +132,8 @@ describe('getPermutations', () => {
       expect(result[0]).toBe(input);
     });
 
-    describe('with regular Options', () => {
-      test('when there are permutations, it should return an array of arrays with the different permutations', () => {
+    describe('when there are permutations with regular Options', () => {
+      test('it should return an array of arrays with the different permutations', () => {
         const input = [new Options(1, 2, 3), new Options('a', 'b'), true];
         const result = getPermutations(input);
 
@@ -88,7 +148,7 @@ describe('getPermutations', () => {
       });
     });
 
-    describe('with DynamicOptions', () => {
+    describe('when there are permutations with DynamicOptions', () => {
       test('it should return an array of arrays with the different permutations', () => {
         const input = [
           1,
@@ -109,7 +169,7 @@ describe('getPermutations', () => {
       });
     });
 
-    describe('with both Options and DynamicOptions', () => {
+    describe('when there are permutations with both Options and DynamicOptions', () => {
       test('it should return the array of arrays when they are separate', () => {
         const input = [
           1,
@@ -145,6 +205,27 @@ describe('getPermutations', () => {
           [1, 2, 2, 3, 3, 4],
           [1, 2, 2, 4, 3, 4],
         ]);
+      });
+
+      test.skip('it should return the array of arrays when the length is dynamic', () => {
+        const testArr = [1, 2, 3, 4];
+        const dynamicFn = (next, prev, index, arr) => {
+          if (index >= arr.length) {
+            return [];
+          }
+
+          if (testArr[index] % 2) {
+            return [testArr[index]];
+          }
+
+          return [testArr[index], new DynamicOptions(dynamicFn)];
+        };
+
+        const input = [new DynamicOptions(dynamicFn)];
+
+        const result = getPermutations(input);
+
+        expect(result).toEqual([]);
       });
     });
   });
