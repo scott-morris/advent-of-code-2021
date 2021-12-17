@@ -14,12 +14,16 @@ class DynamicOptions {
 
 // Private
 
+function isOption(val) {
+  return val instanceof Options || val instanceof DynamicOptions;
+}
+
 function getArrayPermutations(arr) {
   let index = -1;
 
   if (
     !arr.some((item, i) => {
-      if (item instanceof Options || item instanceof DynamicOptions) {
+      if (isOption(item)) {
         index = i;
         return true;
       }
@@ -34,17 +38,25 @@ function getArrayPermutations(arr) {
 
   const permutations = [];
 
-  const options =
-    arr[index] instanceof DynamicOptions
-      ? arr[index].run(nextItems, previousItems)
-      : arr[index];
-
-  options.forEach((item) => {
+  const addPermutations = (item) => {
     const nextPermutations = getArrayPermutations(nextItems);
     permutations.push(
-      ...nextPermutations.map((next) => [...previousItems, item, ...next])
+      ...nextPermutations.map((next) => [...previousItems, ...item, ...next])
     );
-  });
+  };
+
+  if (arr[index] instanceof DynamicOptions) {
+    const result = arr[index].run(nextItems, previousItems, index, arr);
+    const options = getArrayPermutations(result);
+
+    if (options[0] === result) {
+      result.forEach((item) => addPermutations([item]));
+    } else {
+      options.forEach(addPermutations);
+    }
+  } else {
+    arr[index].forEach((item) => addPermutations([item]));
+  }
 
   return permutations;
 }
@@ -54,7 +66,7 @@ function getObjectPermutations(obj) {
 
   if (
     !Object.keys(obj).some((key) => {
-      if (obj[key] instanceof Options || obj[key] instanceof DynamicOptions) {
+      if (isOption(obj[key])) {
         prop = key;
         return true;
       }
