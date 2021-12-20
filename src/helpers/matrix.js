@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 // Dependencies
 
 const math = require('./math');
@@ -24,6 +25,17 @@ function validateCoords({ x, y }) {
 }
 
 // Public
+
+const flags = {
+  RIGHT: 0b00000001,
+  BOTTOM_RIGHT: 0b00000010,
+  BOTTOM: 0b00000100,
+  BOTTOM_LEFT: 0b00001000,
+  LEFT: 0b00010000,
+  TOP_LEFT: 0b00100000,
+  TOP: 0b01000000,
+  TOP_RIGHT: 0b10000000,
+};
 
 function translateCoords(coords) {
   let result;
@@ -138,22 +150,51 @@ class Matrix {
     return this;
   }
 
-  getAdjacents(coords, { includeDiagonals = false } = {}) {
+  getAdjacents(
+    coords,
+    { includeDiagonals = false, includeDirections = 0 } = {}
+  ) {
     const self = this;
     const { x, y } = translateCoords(coords);
     const adjacents = [];
 
-    // right, below, left, above
-    adjacents.push(this.get({ x: x + 1, y }, { includeCoords: true }));
-    adjacents.push(this.get({ x, y: y + 1 }, { includeCoords: true }));
-    adjacents.push(this.get({ x: x - 1, y }, { includeCoords: true }));
-    adjacents.push(this.get({ x, y: y - 1 }, { includeCoords: true }));
+    let directions;
 
-    if (includeDiagonals) {
-      // BR, BL, TL, TR
+    // Only set if directions weren't specifically given
+    if (includeDirections === 0) {
+      directions = flags.RIGHT | flags.BOTTOM | flags.LEFT | flags.TOP;
+
+      if (includeDiagonals) {
+        directions |=
+          flags.BOTTOM_RIGHT |
+          flags.BOTTOM_LEFT |
+          flags.TOP_LEFT |
+          flags.TOP_RIGHT;
+      }
+    }
+
+    if (directions & flags.RIGHT) {
+      adjacents.push(this.get({ x: x + 1, y }, { includeCoords: true }));
+    }
+    if (directions & flags.BOTTOM) {
+      adjacents.push(this.get({ x, y: y + 1 }, { includeCoords: true }));
+    }
+    if (directions & flags.LEFT) {
+      adjacents.push(this.get({ x: x - 1, y }, { includeCoords: true }));
+    }
+    if (directions & flags.TOP) {
+      adjacents.push(this.get({ x, y: y - 1 }, { includeCoords: true }));
+    }
+    if (directions & flags.BOTTOM_RIGHT) {
       adjacents.push(this.get({ x: x + 1, y: y + 1 }, { includeCoords: true }));
+    }
+    if (directions & flags.BOTTOM_LEFT) {
       adjacents.push(this.get({ x: x - 1, y: y + 1 }, { includeCoords: true }));
+    }
+    if (directions & flags.TOP_LEFT) {
       adjacents.push(this.get({ x: x - 1, y: y - 1 }, { includeCoords: true }));
+    }
+    if (directions & flags.TOP_RIGHT) {
       adjacents.push(this.get({ x: x + 1, y: y - 1 }, { includeCoords: true }));
     }
 
@@ -162,7 +203,7 @@ class Matrix {
       .map((c) => self.get(c, { includeCoords: true }));
   }
 
-  flip(axis = 'y') {
+  flip({ axis = 'y', height = this.height } = {}) {
     if (axis === 'x') {
       const { width } = this;
       this.data = this.data.map((row) => {
