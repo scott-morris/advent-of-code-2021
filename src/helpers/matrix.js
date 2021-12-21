@@ -161,14 +161,16 @@ class Matrix {
     let directions;
 
     // Only set if directions weren't specifically given
-    if (includeDirections === 0) {
-      directions = flags.RIGHT | flags.BOTTOM | flags.LEFT | flags.TOP;
+    if (includeDirections > 0) {
+      directions = includeDirections;
+    } else {
+      directions = flags.RIGHT + flags.BOTTOM + flags.LEFT + flags.TOP;
 
       if (includeDiagonals) {
-        directions |=
-          flags.BOTTOM_RIGHT |
-          flags.BOTTOM_LEFT |
-          flags.TOP_LEFT |
+        directions +=
+          flags.BOTTOM_RIGHT +
+          flags.BOTTOM_LEFT +
+          flags.TOP_LEFT +
           flags.TOP_RIGHT;
       }
     }
@@ -264,7 +266,7 @@ class Matrix {
   }
 }
 
-module.exports = { translateCoords, Matrix };
+module.exports = { matrixFlags: flags, translateCoords, Matrix };
 
 /**
  * @typedef Matrix~CoordsObject

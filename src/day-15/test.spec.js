@@ -4,7 +4,7 @@ const { Matrix } = require('../helpers/matrix');
 
 // Functions to Test
 const parseInput = require('./parse-input.js');
-const { part1 } = require('./part1.js');
+const { getLowestRisk, part1 } = require('./part1.js');
 const { part2 } = require('./part2.js');
 
 // Test Input
@@ -43,6 +43,21 @@ describe('day15-parse-input: ', () => {
 });
 
 describe('day15-part1: ', () => {
+  describe('getLowestRisk()', () => {
+    const result = getLowestRisk(parsedInput);
+
+    test('it should identify risk correctly', () => {
+      expect(result.get('0,0')).toBe(0);
+      expect(result.get('0,1')).toBe(1);
+      expect(result.get('1,0')).toBe(1);
+      expect(result.get('0,2')).toBe(3);
+      expect(result.get('2,0')).toBe(7);
+      expect(result.get('1,2')).toBe(4);
+      expect(result.get('2,2')).toBe(7);
+      expect(result.get('3,2')).toBe(13);
+    });
+  });
+
   test('processing sample data should equal 40', () => {
     expect(part1(parsedInput)).toEqual(40);
   });

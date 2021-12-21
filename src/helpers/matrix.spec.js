@@ -1,6 +1,6 @@
 // Dependencies
 
-const { translateCoords, Matrix } = require('./matrix');
+const { matrixFlags, translateCoords, Matrix } = require('./matrix');
 
 // Tests
 
@@ -201,6 +201,76 @@ describe('class: Matrix', () => {
       });
     });
 
+    describe('getAdjacents()', () => {
+      test('getAdjacents(coords) should return valid adjacent nodes', () => {
+        const center = matrix.getAdjacents({ x: 1, y: 1 });
+        const corner = matrix.getAdjacents({ x: 0, y: 0 });
+        const side = matrix.getAdjacents({ x: 0, y: 1 });
+
+        expect(corner.length).toBe(2);
+        expect(corner).toContainEqual({ x: 1, y: 0, value: 2 });
+        expect(corner).toContainEqual({ x: 0, y: 1, value: 4 });
+
+        expect(center.length).toBe(4);
+        expect(center).toContainEqual({ x: 1, y: 0, value: 2 });
+        expect(center).toContainEqual({ x: 0, y: 1, value: 4 });
+        expect(center).toContainEqual({ x: 2, y: 1, value: 6 });
+        expect(center).toContainEqual({ x: 1, y: 2, value: 8 });
+
+        expect(side.length).toBe(3);
+        expect(side).toContainEqual({ x: 0, y: 0, value: 1 });
+        expect(side).toContainEqual({ x: 1, y: 1, value: 5 });
+        expect(side).toContainEqual({ x: 0, y: 2, value: 7 });
+      });
+
+      test('getAdjacents(coords, {includeDiagonals:true}) should return valid adjacent nodes including diagonals', () => {
+        const center = matrix.getAdjacents(
+          { x: 1, y: 1 },
+          { includeDiagonals: true }
+        );
+        const corner = matrix.getAdjacents(
+          { x: 0, y: 0 },
+          { includeDiagonals: true }
+        );
+        const side = matrix.getAdjacents(
+          { x: 0, y: 1 },
+          { includeDiagonals: true }
+        );
+
+        expect(corner.length).toBe(3);
+        expect(corner).toContainEqual({ x: 1, y: 0, value: 2 });
+        expect(corner).toContainEqual({ x: 0, y: 1, value: 4 });
+        expect(corner).toContainEqual({ x: 1, y: 1, value: 5 });
+
+        expect(center.length).toBe(8);
+        expect(center).toContainEqual({ x: 0, y: 0, value: 1 });
+        expect(center).toContainEqual({ x: 1, y: 0, value: 2 });
+        expect(center).toContainEqual({ x: 2, y: 0, value: 3 });
+        expect(center).toContainEqual({ x: 0, y: 1, value: 4 });
+        expect(center).toContainEqual({ x: 2, y: 1, value: 6 });
+        expect(center).toContainEqual({ x: 0, y: 2, value: 7 });
+        expect(center).toContainEqual({ x: 1, y: 2, value: 8 });
+        expect(center).toContainEqual({ x: 2, y: 2, value: 9 });
+
+        expect(side.length).toBe(5);
+        expect(side).toContainEqual({ x: 0, y: 0, value: 1 });
+        expect(side).toContainEqual({ x: 1, y: 0, value: 2 });
+        expect(side).toContainEqual({ x: 1, y: 1, value: 5 });
+        expect(side).toContainEqual({ x: 0, y: 2, value: 7 });
+        expect(side).toContainEqual({ x: 1, y: 2, value: 8 });
+      });
+    });
+
+    test('getAdjacents(coords, {includeDirections}) should return valid adjacent nodes including only given directions', () => {
+      const topOnly = matrix.getAdjacents(
+        { x: 1, y: 1 },
+        { includeDirections: matrixFlags.TOP }
+      );
+
+      expect(topOnly.length).toBe(1);
+      expect(topOnly).toContainEqual({ x: 1, y: 0, value: 2 });
+    });
+
     describe('when invalid coordinates are provided', () => {
       test('get() should return the default value', () => {
         expect(matrix.get({ x: 'foo', y: 2 }, { defaultValue: 'foo' })).toBe(
@@ -276,147 +346,87 @@ describe('class: Matrix', () => {
         ]);
         expect(result).toBe(matrix);
       });
+    });
 
-      test('getAdjacents(coords) should return valid adjacent nodes', () => {
-        const center = matrix.getAdjacents({ x: 1, y: 1 });
-        const corner = matrix.getAdjacents({ x: 0, y: 0 });
-        const side = matrix.getAdjacents({ x: 0, y: 1 });
+    describe('merge()', () => {
+      let toMerge;
 
-        expect(corner.length).toBe(2);
-        expect(corner).toContainEqual({ x: 1, y: 0, value: 2 });
-        expect(corner).toContainEqual({ x: 0, y: 1, value: 4 });
+      beforeEach(() => {
+        matrix = new Matrix([
+          [1, 2, 3],
+          [4, 5, 6],
+          [7, 8, 9],
+        ]);
 
-        expect(center.length).toBe(4);
-        expect(center).toContainEqual({ x: 1, y: 0, value: 2 });
-        expect(center).toContainEqual({ x: 0, y: 1, value: 4 });
-        expect(center).toContainEqual({ x: 2, y: 1, value: 6 });
-        expect(center).toContainEqual({ x: 1, y: 2, value: 8 });
-
-        expect(side.length).toBe(3);
-        expect(side).toContainEqual({ x: 0, y: 0, value: 1 });
-        expect(side).toContainEqual({ x: 1, y: 1, value: 5 });
-        expect(side).toContainEqual({ x: 0, y: 2, value: 7 });
+        toMerge = new Matrix();
+        toMerge.set([0, 0], 10, { mustExist: false });
+        toMerge.set([1, 1], -1, { mustExist: false });
+        toMerge.set([2, 2], 100, { mustExist: false });
       });
 
-      test('getAdjacents(coords, {includeDiagonals:true}) should return valid adjacent nodes including diagonals', () => {
-        const center = matrix.getAdjacents(
-          { x: 1, y: 1 },
-          { includeDiagonals: true }
-        );
-        const corner = matrix.getAdjacents(
-          { x: 0, y: 0 },
-          { includeDiagonals: true }
-        );
-        const side = matrix.getAdjacents(
-          { x: 0, y: 1 },
-          { includeDiagonals: true }
-        );
+      test('when called without a function, it should replace the values', () => {
+        const result = matrix.merge(toMerge);
 
-        expect(corner.length).toBe(3);
-        expect(corner).toContainEqual({ x: 1, y: 0, value: 2 });
-        expect(corner).toContainEqual({ x: 0, y: 1, value: 4 });
-        expect(corner).toContainEqual({ x: 1, y: 1, value: 5 });
+        expect(matrix.data).toEqual([
+          [10, 2, 3],
+          [4, -1, 6],
+          [7, 8, 100],
+        ]);
+        expect(result).toBe(matrix);
+      });
 
-        expect(center.length).toBe(8);
-        expect(center).toContainEqual({ x: 0, y: 0, value: 1 });
-        expect(center).toContainEqual({ x: 1, y: 0, value: 2 });
-        expect(center).toContainEqual({ x: 2, y: 0, value: 3 });
-        expect(center).toContainEqual({ x: 0, y: 1, value: 4 });
-        expect(center).toContainEqual({ x: 2, y: 1, value: 6 });
-        expect(center).toContainEqual({ x: 0, y: 2, value: 7 });
-        expect(center).toContainEqual({ x: 1, y: 2, value: 8 });
-        expect(center).toContainEqual({ x: 2, y: 2, value: 9 });
+      test('when called with a function, it should replace the values based on that function', () => {
+        const result = matrix.merge(toMerge, (a, b) => a * b + 1);
 
-        expect(side.length).toBe(5);
-        expect(side).toContainEqual({ x: 0, y: 0, value: 1 });
-        expect(side).toContainEqual({ x: 1, y: 0, value: 2 });
-        expect(side).toContainEqual({ x: 1, y: 1, value: 5 });
-        expect(side).toContainEqual({ x: 0, y: 2, value: 7 });
-        expect(side).toContainEqual({ x: 1, y: 2, value: 8 });
+        expect(matrix.data).toEqual([
+          [11, 2, 3],
+          [4, -4, 6],
+          [7, 8, 901],
+        ]);
+        expect(result).toBe(matrix);
       });
     });
-  });
 
-  describe('merge()', () => {
-    let matrix;
-    let toMerge;
+    describe('given a sparsely populated matrix', () => {
+      beforeEach(() => {
+        matrix = new Matrix();
+        matrix.set([0, 0], 'x', { mustExist: false });
+        matrix.set([10, 10], 'y', { mustExist: false });
+        matrix.set([20, 20], 'z', { mustExist: false });
+      });
 
-    beforeEach(() => {
-      matrix = new Matrix([
-        [1, 2, 3],
-        [4, 5, 6],
-        [7, 8, 9],
-      ]);
+      test('length() should be the number of elements set', () => {
+        expect(matrix.length).toBe(3);
+      });
 
-      toMerge = new Matrix();
-      toMerge.set([0, 0], 10, { mustExist: false });
-      toMerge.set([1, 1], -1, { mustExist: false });
-      toMerge.set([2, 2], 100, { mustExist: false });
-    });
+      test('width() should be the widest row', () => {
+        expect(matrix.width).toBe(21);
+      });
 
-    test('when called without a function, it should replace the values', () => {
-      const result = matrix.merge(toMerge);
+      test('height() should be the length of the outer array', () => {
+        expect(matrix.height).toBe(21);
+      });
 
-      expect(matrix.data).toEqual([
-        [10, 2, 3],
-        [4, -1, 6],
-        [7, 8, 100],
-      ]);
-      expect(result).toBe(matrix);
-    });
+      test('forEach() should only run on the 3 elements', () => {
+        const fn = jest.fn();
+        matrix.forEach(fn);
 
-    test('when called with a function, it should replace the values based on that function', () => {
-      const result = matrix.merge(toMerge, (a, b) => a * b + 1);
+        // It should be called 3 times
+        expect(fn.mock.calls.length).toBe(3);
 
-      expect(matrix.data).toEqual([
-        [11, 2, 3],
-        [4, -4, 6],
-        [7, 8, 901],
-      ]);
-      expect(result).toBe(matrix);
-    });
-  });
+        // Test the calls
+        expect(fn.mock.calls[0][0]).toBe('x');
+        expect(fn.mock.calls[0][1]).toEqual({ x: 0, y: 0 });
+        expect(fn.mock.calls[0][2]).toBe(matrix);
 
-  describe('given a sparsely populated matrix', () => {
-    let matrix;
-    beforeEach(() => {
-      matrix = new Matrix();
-      matrix.set([0, 0], 'x', { mustExist: false });
-      matrix.set([10, 10], 'y', { mustExist: false });
-      matrix.set([20, 20], 'z', { mustExist: false });
-    });
+        expect(fn.mock.calls[1][0]).toBe('y');
+        expect(fn.mock.calls[1][1]).toEqual({ x: 10, y: 10 });
+        expect(fn.mock.calls[1][2]).toBe(matrix);
 
-    test('length() should be the number of elements set', () => {
-      expect(matrix.length).toBe(3);
-    });
-
-    test('width() should be the widest row', () => {
-      expect(matrix.width).toBe(21);
-    });
-
-    test('height() should be the length of the outer array', () => {
-      expect(matrix.height).toBe(21);
-    });
-
-    test('forEach() should only run on the 3 elements', () => {
-      const fn = jest.fn();
-      matrix.forEach(fn);
-
-      // It should be called 3 times
-      expect(fn.mock.calls.length).toBe(3);
-
-      // Test the calls
-      expect(fn.mock.calls[0][0]).toBe('x');
-      expect(fn.mock.calls[0][1]).toEqual({ x: 0, y: 0 });
-      expect(fn.mock.calls[0][2]).toBe(matrix);
-
-      expect(fn.mock.calls[1][0]).toBe('y');
-      expect(fn.mock.calls[1][1]).toEqual({ x: 10, y: 10 });
-      expect(fn.mock.calls[1][2]).toBe(matrix);
-
-      expect(fn.mock.calls[2][0]).toBe('z');
-      expect(fn.mock.calls[2][1]).toEqual({ x: 20, y: 20 });
-      expect(fn.mock.calls[2][2]).toBe(matrix);
+        expect(fn.mock.calls[2][0]).toBe('z');
+        expect(fn.mock.calls[2][1]).toEqual({ x: 20, y: 20 });
+        expect(fn.mock.calls[2][2]).toBe(matrix);
+      });
     });
   });
 });
