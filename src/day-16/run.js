@@ -12,7 +12,7 @@ const parseInput = require('./parse-input');
 // Public
 
 function main() {
-  const raw = fs.readArraySync(getInputFile(-1));
+  const raw = fs.readFileSync(getInputFile(16)).toString();
   const input = parseInput(raw);
 
   const result1 = timeExecution(part1)(input);

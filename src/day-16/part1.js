@@ -30,7 +30,7 @@ function getValueByLength(binary) {
   // the first 15 bits are a number that represents the total length in bits of the sub-packets contained by this packet
   const length = parseInt(binary.slice(0, 15), 2);
   const binSubPackets = binary.slice(15, 15 + length);
-  const { packets: subPackets } = processMultiple(binSubPackets);
+  const { packets: subPackets } = processMultiplePackets(binSubPackets);
 
   return {
     type: 'length',
@@ -45,7 +45,7 @@ function getValueByCount(givenBinary) {
   const numSubPackets = parseInt(givenBinary.slice(0, 11), 2);
   const binary = givenBinary.substring(11);
 
-  const { packets: subPackets, remaining } = processMultiple(
+  const { packets: subPackets, remaining } = processMultiplePackets(
     binary,
     numSubPackets
   );
@@ -62,11 +62,20 @@ function checkRemaining(remaining) {
   return parseInt(remaining, 2) > 0 ? remaining : '';
 }
 
-function flattenSubPackets({ subPackets = [], ...packet } = {}) {
-  return [packet, ...subPackets.map(flattenSubPackets).flat()];
+function flattenSubPackets(givenPackets) {
+  return givenPackets.reduce(
+    (packets, { subPackets = [], ...packet }) => [
+      ...packets,
+      packet,
+      ...flattenSubPackets(subPackets),
+    ],
+    []
+  );
 }
 
-function processMultiple(givenBinary, count = Infinity) {
+// Public
+
+function processMultiplePackets(givenBinary, count = Infinity) {
   let binary = givenBinary;
   const packets = [];
 
@@ -83,8 +92,6 @@ function processMultiple(givenBinary, count = Infinity) {
 
   return { packets, remaining: binary };
 }
-
-// Public
 
 function decodePacket(str) {
   const binPacketVersion = str.slice(0, 3);
@@ -109,9 +116,9 @@ function decodePacket(str) {
 }
 
 function part1(input) {
-  const { packets: nestedPackets } = processMultiple(input);
+  const { packets: nestedPackets } = processMultiplePackets(input);
   const packets = flattenSubPackets(nestedPackets);
-  return packets;
+  return packets.reduce((sum, packet) => sum + packet.packetVersion, 0);
 }
 
-module.exports = { decodePacket, part1 };
+module.exports = { processMultiplePackets, decodePacket, part1 };
