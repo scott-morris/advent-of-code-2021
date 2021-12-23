@@ -7,11 +7,22 @@ const { part2 } = require('./part2.js');
 const input = 'D2FE28';
 const parsedInput = '110100101111111000101000';
 
-const examples = [
+const examplesPart1 = [
   { input: '8A004A801A8002F478', result: 16 },
   { input: '620080001611562C8802118E34', result: 12 },
   { input: 'C0015000016115A2E0802F182340', result: 23 },
   { input: 'A0016C880162017C3686B18A3D4780', result: 31 },
+];
+
+const examplesPart2 = [
+  { input: 'C200B40A82', result: 3 },
+  { input: '04005AC33890', result: 54 },
+  { input: '880086C3E88112', result: 7 },
+  { input: 'CE00C43D881120', result: 9 },
+  { input: 'D8005AC2A8F0', result: 1 },
+  { input: 'F600BC2D8F', result: 0 },
+  { input: '9C005AC2F8F0', result: 0 },
+  { input: '9C0141080250320F1802104A08', result: 1 },
 ];
 
 // Test Specs
@@ -128,7 +139,7 @@ describe('day16-part1: ', () => {
     });
   });
 
-  test.each(examples)(
+  test.each(examplesPart1)(
     'processing $input should equal $result',
     ({ input: example, result }) => {
       const parsed = parseInput(example);
@@ -137,8 +148,14 @@ describe('day16-part1: ', () => {
   );
 });
 
-describe.skip('day16-part2: ', () => {
-  test('processing sample data should equal 99999', () => {
-    expect(part2(parsedInput)).toEqual(99999);
+describe('day16-part2: ', () => {
+  describe('processing sample data should match given results', () => {
+    test.each(examplesPart2)(
+      'processing $input should equal $result',
+      ({ input: example, result }) => {
+        const parsed = parseInput(example);
+        expect(part2(parsed)).toEqual(result);
+      }
+    );
   });
 });
