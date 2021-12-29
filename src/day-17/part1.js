@@ -57,7 +57,6 @@ function lands(startingVelocity, target) {
   let velocity = [...startingVelocity];
   let adjustment = null;
   let maxHeight = 0;
-  let numHits = 0;
 
   let x = 0;
   let y = 0;
@@ -74,10 +73,6 @@ function lands(startingVelocity, target) {
 
     if (landed || gonePast || stoppedShort) {
       adjustment = stoppedShort ? 1 : landed ? 0 : -1;
-
-      if (landed) {
-        numHits = getNumHits(step.coords, step.velocity, target);
-      }
       break;
     } else {
       // Update for next step
@@ -88,7 +83,7 @@ function lands(startingVelocity, target) {
     }
   }
 
-  return { adjustment, maxHeight, numHits };
+  return { adjustment, maxHeight };
 }
 
 function part1(input, startingVelocity = 1000) {
