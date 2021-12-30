@@ -23,17 +23,18 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-jsx-a11y": "^6.5.1",
-    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-prettier": "^3.0.0",
     "eslint-plugin-react": "^7.27.1",
     "eslint-plugin-react-hooks": "^4.3.0",
     "jest": "^27.4.3",
-    "prettier": "^2.5.0",
+    "prettier": "^1.18.2",
     "prettier-airbnb-config": "^1.0.0"
   },
   "dependencies": {
     "chalk": "^4.1.2",
     "console-table-printer": "^2.10.0",
     "fs-extra": "^10.0.0",
-    "jsdom": "^19.0.0"
+    "jsdom": "^19.0.0",
+    "ora": "^5.4.1"
   }
 }
