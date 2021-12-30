@@ -1,13 +1,15 @@
 // Public
 
 function parseInput(input) {
-  const [, minX, maxX, minY, maxY] = input.match(
-    /^target area: x=(-?\d+)\.\.(-?\d+), y=(-?\d+)\.\.(-?\d+)$/
+  const parsed = input.match(
+    /^target area: x=(-?\d+)..(-?\d+), y=(-?\d+)..(-?\d+)$/
   );
 
+  const [, xMin, xMax, yMin, yMax] = parsed.map((i) => parseInt(i, 10));
+
   return {
-    x: [parseInt(minX, 10), parseInt(maxX, 10)],
-    y: [parseInt(minY, 10), parseInt(maxY, 10)],
+    x: [xMin, xMax],
+    y: [yMin, yMax],
   };
 }
 

@@ -1,3 +1,24 @@
+// Private
+
+function hasLanded([x, y], target) {
+  const [xMin, xMax] = target.x;
+  const [yMin, yMax] = target.y;
+
+  return x >= xMin && x <= xMax && y >= yMin && y <= yMax;
+}
+
+function hasGonePast([x, y], target) {
+  const [, xMax] = target.x;
+  const [yMin] = target.y;
+
+  return x > xMax || y < yMin;
+}
+
+function hasStoppedShort([x], [vX], target) {
+  const [xMin] = target.x;
+  return vX === 0 && x < xMin;
+}
+
 // Public
 
 function travel(coords, velocity) {
@@ -11,9 +32,6 @@ function travel(coords, velocity) {
 }
 
 function lands(startingVelocity, target) {
-  const [xMin, xMax] = target.x;
-  const [yMin, yMax] = target.y;
-
   let velocity = [...startingVelocity];
   let adjustment = null;
   let maxHeight = 0;
@@ -27,9 +45,9 @@ function lands(startingVelocity, target) {
     const [sX, sY] = step.coords;
     const [vX, vY] = step.velocity;
 
-    const landed = sX >= xMin && sX <= xMax && sY >= yMin && sY <= yMax;
-    const gonePast = x > xMax || y < yMin;
-    const stoppedShort = vX === 0 && x < xMin;
+    const landed = hasLanded(step.coords, target);
+    const gonePast = hasGonePast(step.coords, target);
+    const stoppedShort = hasStoppedShort(step.coords, step.velocity, target);
 
     if (landed || gonePast || stoppedShort) {
       adjustment = stoppedShort ? 1 : landed ? 0 : -1;
